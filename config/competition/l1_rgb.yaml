@@ -1,0 +1,40 @@
+schema_version: 1
+input: {encoding: RGB8, resize: false}
+# OpenCV HSV: H=0..179, S/V=0..255. Development values; tune on site images.
+colors:
+  red:
+    hsv_ranges: [[[0, 75, 30], [12, 255, 255]], [[170, 75, 30], [179, 255, 255]]]
+  green:
+    hsv_ranges: [[[35, 65, 25], [89, 255, 255]]]
+  yellow:
+    hsv_ranges: [[[16, 75, 35], [34, 255, 255]]]
+# Expand only same-hue pixels connected to clearly coloured pixels. Do not
+# globally lower thresholds or infer white balance from the coloured scene.
+color_support:
+  enabled: true
+  saturation_margin: 20
+  value_margin: 15
+  saturation_floor: 35
+  value_floor: 12
+  min_seed_pixels: 40
+  min_seed_fraction: 0.20
+segmentation:
+  open_kernel_px: 3
+  close_kernel_px: 3
+  min_component_area_px: 60
+  max_component_area_fraction: 0.30
+  min_solidity: 0.70
+  min_rectangle_fill: 0.45
+  max_rectangle_aspect: 3.0
+  boundary_margin_px: 2
+# Optional normalized image polygons [u/(width-1), v/(height-1)].
+# Keep null/empty until the actual view is known. Wrist-camera ROIs move with the view!
+roi:
+  include_polygon: null
+  exclude_polygons: []
+competition_reference:
+  rule_version: '2026-11-10'
+  cube_edge_m: 0.050
+  cube_tolerance_m: 0.002
+  target_zone_size_m: [0.200, 0.200]
+  note: 'Dimensions are for the next RGB-D stage, not pixel-size assumptions.'

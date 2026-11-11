@@ -1,0 +1,57 @@
+{
+  "source": "YCB Object and Model Set",
+  "license": "CC BY 4.0",
+  "authors": "Berk Calli, Arjun Singh, Aaron Walsman, Siddhartha Srinivasa, Pieter Abbeel, Aaron M. Dollar",
+  "source_page": "https://ycb-benchmarks.s3.amazonaws.com/index.html",
+  "accessed": "2026-11-04",
+  "files": [
+    {
+      "id": "011_banana",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/011_banana_google_16k.tgz",
+      "archive_bytes": 5715660,
+      "sha256": "bad03e98066dec02ea1536ff2fa58f068efa97e9dbc89fceb4418f1ec633c881"
+    },
+    {
+      "id": "012_strawberry",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/012_strawberry_google_16k.tgz",
+      "archive_bytes": 6888074,
+      "sha256": "377955b6d931541fd5dc082eefbdd686ea835cbea7f5e3ab6c1bfb8c60499012"
+    },
+    {
+      "id": "013_apple",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/013_apple_google_16k.tgz",
+      "archive_bytes": 5950199,
+      "sha256": "46249b76379bae26a6f78861b5568ceed25cf1e397530a313430b1d94d57320c"
+    },
+    {
+      "id": "014_lemon",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/014_lemon_google_16k.tgz",
+      "archive_bytes": 5501313,
+      "sha256": "5b18a5c7b097893cbd1a5c12ef8ee03aa0b62d300a9610377f1b131575da5a45"
+    },
+    {
+      "id": "015_peach",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/015_peach_google_16k.tgz",
+      "archive_bytes": 4789671,
+      "sha256": "f0079b7f6ca8b8413cf38e6859a059453c2d12c76e5089c0c2dff6c68f9718bd"
+    },
+    {
+      "id": "016_pear",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/016_pear_google_16k.tgz",
+      "archive_bytes": 5905739,
+      "sha256": "9847a4a7f21b821538ffb4881edc0569d546bbf8360b1583f04c1f1c617639c6"
+    },
+    {
+      "id": "017_orange",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/017_orange_google_16k.tgz",
+      "archive_bytes": 5221002,
+      "sha256": "74d70a3d338d03f9c6afd4a8e1d3f8ec7a6f0e52fd0771c33c497e05920b4631"
+    },
+    {
+      "id": "018_plum",
+      "url": "https://ycb-benchmarks.s3.amazonaws.com/data/google/018_plum_google_16k.tgz",
+      "archive_bytes": 4779356,
+      "sha256": "f9cf1e4c6b7a1106d1635d8ec9fd6e21fe453e6e71ea7f4ef5b794ab0cb93d34"
+    }
+  ]
+}

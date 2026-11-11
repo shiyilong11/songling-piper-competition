@@ -1,0 +1,65 @@
+# 所有平移单位：米；内参单位：像素。
+# 示例值用于仿真，不是真实标定结果。
+schema_version: 1
+calibration:
+  status: simulation_example  # 真实标定后改为 calibrated，并填写来源
+  source: "根据用户安装参考图估计：夹爪根部横装；尺寸及外参待实测"
+
+camera:
+  name: wrist_camera
+  model: RealSense D435
+  profile: d435_rgb_aligned_depth_640x480_30
+  fps: 30
+  intrinsics_source: nominal_rgb_vfov42_square_pixels_center_crop_estimate
+  # 产品标称视场仅供参考；实际640x480模式以内参为准。
+  nominal_specs:
+    rgb_fov_deg: [69.0, 42.0]
+    depth_fov_deg: [87.0, 58.0]
+    housing_size_m: [0.090, 0.025, 0.025]
+    source_url: https://www.realsenseai.com/products/stereo-depth-camera-d435/
+  width: 640
+  height: 480
+  # 对应已去畸变图像的K。分辨率改变时需要同步更新内参。
+  intrinsics:
+    fx: 625.221376
+    fy: 625.221376
+    cx: 320.0
+    cy: 240.0
+  # 实际相机原始畸变参数；仿真生成理想针孔图像，不模拟畸变。
+  distortion:
+    model: opencv_plumb_bob
+    coefficients: [0.0, 0.0, 0.0, 0.0, 0.0]  # k1,k2,p1,p2,k3
+  depth:
+    # 采用保守观察范围；近距阈值参考最高分辨率Min-Z，并非640x480实测阈值。
+    min_valid_m: 0.28
+    max_valid_m: 3.0
+    simulation: ideal_aligned_to_color_with_range_mask
+    meters_per_unit: 0.001  # 实际原始深度值乘此系数得到米；仿真深度已经是米
+
+hand_eye:
+  # 必须与标定时采用的机械臂末端坐标系一致。
+  # 这里的link6是URDF末端坐标系，不保证等于SDK默认末端/TCP坐标系。
+  parent_body: link6
+  child_frame: camera_color_optical_frame
+  # 固定约定：p_end = T_end_camera @ p_camera（齐次列向量）。
+  # 矩阵把相机光学坐标系中的点变换到parent_body末端坐标系。
+  # 光学坐标：X向右、Y向下、Z向前；不是相机外壳坐标系。
+  T_end_camera:
+    # 镜头朝向夹爪伸出方向（末端+Z），横向沿末端Y；安装在末端-X侧。
+    - [ 0.0, -1.0,  0.0, -0.065]
+    - [ 1.0,  0.0,  0.0,  0.000]
+    - [ 0.0,  0.0,  1.0,  0.055]
+    - [ 0.0,  0.0,  0.0, 1.000]
+
+simulation:
+  # link1至link6关节角（弧度），后两项为左右夹爪滑动位置（米）。
+  initial_qpos: [0.0, 0.7, -1.0, 0.0, 1.15, 0.0, 0.02, -0.02]
+  show_camera_marker: true  # 仅作可视化标记，无相机质量及碰撞模型
+  demo_targets: true       # 静态观察用目标，不是比赛物体或可抓取任务
+
+  camera_visual:
+    # D435标称外壳尺寸；镜头与支架位置仍为近似。长宽厚，单位米。
+    housing_size_m: [0.090, 0.025, 0.025]
+    # 支架位姿在parent_body坐标系下，不影响手眼标定矩阵。
+    bracket_position_m: [-0.040, 0.0, 0.030]
+    bracket_size_m: [0.050, 0.110, 0.006]

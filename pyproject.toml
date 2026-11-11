@@ -1,0 +1,23 @@
+[project]
+name = "songling-piper-competition"
+version = "0.1.0"
+description = "PiPER competition simulation and ROS 2 deployment source"
+requires-python = ">=3.12,<3.13"
+dependencies = ["mujoco==3.17.0", "numpy==2.5.4", "scipy==1.18.1", "opencv-python-headless==4.14.0.94", "PyYAML==6.0.3", "Pillow==13.0.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/piper_sim"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "scripts"]
+
+[tool.ruff]
+line-length = 100

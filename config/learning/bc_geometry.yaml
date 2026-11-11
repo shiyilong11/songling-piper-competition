@@ -1,0 +1,19 @@
+schema_version: 1
+dataset: data/demonstrations/piper_targeted_multi_v2
+# Separate derived artifacts; never rewrite demonstrations or their original split.
+output: artifacts/bc_geometry_v1
+split_seed: 20261109
+split_fractions: [0.70, 0.15, 0.15]
+history_steps: 4
+stages: [pregrasp, descend, close, lift]
+action_protocol: normalized_joint_delta_and_gripper_width_7d
+policy_hz: 20
+memory:
+  min_points: 12
+  max_age_s: 2.0
+  max_sensor_age_s: 0.10
+  max_center_jump_m: 0.04
+# Development thresholds, not measured calibration accuracy or safety guarantees.
+# No RGB, object category, simulator truth, teacher stage or future observation
+# enters the actor. Physical priors stay disabled until independently supported.
+physical_priors: disabled

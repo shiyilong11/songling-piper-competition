@@ -1,0 +1,17 @@
+schema_version: 1
+# 千问测试入口只使用眼在手上相机；安装外参与内参统一从此文件读取。
+scene_config: config/competition/scene.yaml
+hand_eye_config: config/cameras/competition_sim_nominal.yaml
+model_config: config/vlm/qwen.yaml
+# edgetam 默认兼顾连续性与速度；可改为 cutie 或 sam2_small。
+tracking_method: edgetam
+# 自主L3不接收演示mask、人工指定目标/区域或手工完成回执。
+sensor_only: true
+task: exploration
+seed: 42
+# 六个机械臂关节，单位弧度。此处仅为仿真观察姿态。
+# Initial view of the pickup desk in the photo-guided dual-table scene.
+observation_q_rad: [0.0, 0.86, -0.72, 0.0, 1.20, 0.0]
+gripper_width_m: 0.06
+host: 127.0.0.1
+port: 8768

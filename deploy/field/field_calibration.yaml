@@ -1,0 +1,20 @@
+# Fill from the camera/hand-eye calibration for this bench.
+# Use the dimensions and intrinsics of the RGB stream that receives registered depth.
+schema_version: 1
+camera:
+  width: null
+  height: null
+  optical_frame: camera_color_optical_frame
+  intrinsics: {fx: null, fy: null, cx: null, cy: null}
+  # [] for already rectified images. For raw aligned images, use [k1,k2,p1,p2,k3].
+  distortion_coefficients: []
+  depth:
+    meters_per_unit: null  # 0.001 only if confirmed to be one millimetre per unit
+    min_valid_m: null
+    max_valid_m: null
+hand_eye:
+  # link6 for a wrist-mounted camera. base_link for a camera fixed to the bench.
+  parent_frame: link6
+  # 4x4 row-major transform. p_parent = T_parent_camera_optical @ p_camera.
+  # Translation is in metres. Use the optical axes x right, y down, z forward.
+  T_parent_camera_optical: null

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>腕部相机 × 千问 · 多帧任务理解</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0d1420;color:#e7edf6;font:16px system-ui,sans-serif}main{max-width:1440px;margin:auto;padding:24px}h1{font-size:28px;margin:0 0 8px}h2{font-size:18px;margin:0 0 12px}p{line-height:1.65}.sub{color:#aab9ce}.badge{color:#80e8cf;background:#17382f;border-radius:8px;padding:6px 12px;display:inline-block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}.panel{background:#182334;border:1px solid #2d3b51;border-radius:12px;padding:16px}canvas,img{width:100%;display:block;border-radius:8px;background:#101923}button,input,textarea,select{font:inherit;border-radius:7px;border:1px solid #52627b;padding:10px;background:#243247;color:#fff}button{cursor:pointer;margin:4px 6px 4px 0}button.primary{background:#246bca;border-color:#347bdd}button:disabled{opacity:.5;cursor:wait}textarea{width:100%;min-height:78px;resize:vertical}pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:350px;overflow:auto;color:#cde3ff;font-size:14px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.joint{display:grid;grid-template-columns:34px 1fr 90px;align-items:center;gap:8px;margin:10px 0}.joint input[type=range]{padding:0;width:100%}.joint input[type=number]{width:90px}#status{padding:12px 0;color:#8fe7d4}#seed{width:100px}.hint{font-size:14px;color:#aab9ce;margin:9px 0}.examples button{font-size:14px;padding:7px}label{display:block;margin:10px 0 6px}@media(max-width:900px){.grid{grid-template-columns:1fr}main{padding:14px}}
+.memory-heading{justify-content:space-between}.memory-heading h2{margin:0}.memory-count{color:#80e8cf}.keyframes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.keyframe{background:#101923;border-radius:8px;padding:10px}.keyframe p{font-size:13px;color:#aab9ce;margin:8px 0 0}.keyframe img{aspect-ratio:4/3;object-fit:contain}.memory-scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}td,th{text-align:left;padding:10px;border-bottom:1px solid #2d3b51}th{color:#aab9ce;font-weight:500}.memory-note{color:#f4c881}.region-controls input{width:160px}.region-controls .size-input{width:80px}.selection{outline:2px solid #80e8cf}#memory-status{line-height:1.7;margin:12px 0}#region-list{color:#80e8cf}.mode-select{width:100%;margin-bottom:12px}@media(max-width:900px){.keyframes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<style>
+main{max-width:1200px;padding-top:30px}.workspace-simple{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;margin-top:24px;align-items:start}.workspace-simple .panel{padding:22px}.workspace-simple h2{font-size:17px}.workspace-simple #infer{width:100%;padding:15px;margin:16px 0 0;font-weight:600}.workspace-simple textarea{min-height:110px;line-height:1.8;margin-top:8px}.workspace-simple #result{font:17px/1.85 system-ui,sans-serif;white-space:pre-wrap;max-height:none;color:#e7edf6;min-height:110px}.workspace-simple #resultLabel{color:#80e8cf;font-size:13px}.workspace-simple #frame{font-size:12px;background:transparent;padding:8px 0;color:#aab9ce}.workspace-simple #point-label{font-size:12px;color:#80e8cf}.workspace-simple #status{font-size:13px;min-height:40px;line-height:1.7}.secondary-simple{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.secondary-simple button,.workspace-simple .examples button{font-size:13px;background:transparent;border-color:#3d4c63}.quickstart{font-size:13px;color:#aab9ce;line-height:1.8;margin-bottom:10px}#advanced{border-top:1px solid #2d3b51;margin-top:28px;padding-top:16px}summary{cursor:pointer;color:#aab9ce;font-size:14px;padding:6px 0}#advanced>summary{font-size:15px}#observations{margin-top:15px}.workspace-simple .keyframes{grid-template-columns:repeat(2,minmax(0,1fr))}.keyframe{border:2px solid transparent}.keyframe.target{border-color:#80e8cf}.live-views{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}.live-views>div{min-width:0}#third-person-view{margin:0;padding:0;border:0;background:transparent}#third-person-view h2{font-size:15px}#third-person-view .hint{font-size:12px;margin-bottom:0}[hidden]{display:none!important}@media(max-width:800px){.workspace-simple{grid-template-columns:1fr;gap:16px}}
+</style>
+<main>
+<h1>腕部相机 × 千问 · 多帧任务理解</h1>
+<div class="sub">眼在手上 · 跨视角物体记忆 · 多图＋指令决策 · 不执行抓取</div>
+<div id="status" role="status">正在连接仿真相机…</div>
+<div class="grid">
+ <section class="panel"><h2>① 当前腕部画面</h2><canvas id="rgb" width="640" height="480" aria-label="腕部相机，点击可选择分割或区域中心"></canvas><p class="hint">点击物体内部可设置 SAM 提示点，或在托盘内部标记放置区。多帧模式使用下方关键帧；全景不发给模型。</p><span class="badge" id="frame">尚未采样</span><span id="point-label" class="hint">尚未选点</span></section>
+ <section class="panel"><h2>机械臂全景：仅供你查看安装位置</h2><img id="overview" alt="机械臂全景与末端相机外壳"><p class="hint">这张全景图不会发送给模型。浅色相机外壳固定在末端，尺寸与标定仍为仿真预设。</p><span class="badge" id="gpu">模型未加载</span></section>
+</div>
+<section class="panel" id="memory-panel">
+ <div class="row memory-heading"><h2>② 多帧场景记忆</h2><span id="memory-count" class="memory-count">等待观测</span></div>
+ <div class="row"><button id="scan" class="primary">采集三个观察视角</button><button id="memory-refresh">刷新记忆状态</button><button id="memory-reset">清空记忆，回到腕部画面</button><button id="demo">载入双视角合成样例</button></div>
+ <p id="memory-status" role="status">正在读取场景记忆…</p>
+ <p class="hint">默认以 RGB-D 几何候选初始化实例；可点选后用 SAM 2.1 更新 mask。目标离开画面后仍保留记忆。扫描完成仅表示三个配置视角已采样，不保证发现所有遮挡物体。开发约定：基座 +Y 为左。</p>
+ <div id="keyframes" class="keyframes"></div>
+ <div class="memory-scroll"><table><thead><tr><th>实例 / 身份</th><th>可见状态</th><th>距上次观察</th><th>基座位置 XYZ（米）</th><th>可见尺寸 XYZ（米）</th></tr></thead><tbody id="memory-objects"></tbody></table></div>
+ <p class="hint" id="region-list">尚未设置放置区。</p>
+</section>
+<div class="grid">
+ <section class="panel"><h2>③ 输入你的测试指令</h2>
+ <label for="decision-mode">理解模式</label><select id="decision-mode" class="mode-select"><option value="multiframe">多帧：关键帧＋物体记忆 → 目标与放置区</option><option value="single">单帧：当前腕部画面 → 像素选点</option></select>
+ <label for="instruction">自然语言指令</label><textarea id="instruction" maxlength="2000">把最左边的苹果放到蓝色托盘。</textarea>
+ <div class="examples"><button data-text="把最左边的苹果放到蓝色托盘。">左右关系</button><button data-text="把红色苹果放到绿色托盘。">颜色</button><button data-text="把图中看起来更小的苹果放到蓝色托盘。">大小</button><button data-text="把草莓放到蓝色托盘。">不存在的目标</button><button data-text="把苹果放到蓝色托盘。">歧义</button></div>
+ <button id="prepare">只检查多帧输入</button><button id="infer" class="primary">用多帧记忆调用千问</button><button id="release">释放模型显存</button>
+ <p class="hint">点击调用才加载 Qwen；任务理解和目标选择由模型完成。缺少视角、身份或目的区域时应请求补看。推理只形成计划，不执行动作。合成样例不是识别准确率测试。</p>
+ <h2 style="margin-top:18px">④ 模型回答</h2><div id="resultLabel" class="hint">尚未推理</div><pre id="result">等待你的指令。</pre>
+ <details><summary>接口结果与保存位置</summary><pre id="details"></pre></details>
+ </section>
+ <section class="panel"><h2>调整腕部视野与场景</h2>
+ <div class="row"><label for="seed">布局种子</label><input id="seed" type="number" min="0" max="2147483647" value="42"><button id="reset">重建布局并复位</button><button id="next">换一组布局</button></div>
+ <label for="view-id">当前观察视角标签</label><select id="view-id"><option value="center">center · 中间</option><option value="left">left · 左侧观察位</option><option value="right">right · 右侧观察位</option></select>
+ <div id="joints"></div><button id="pose" class="primary">应用姿态并加入记忆</button><button id="capture">重新采样并加入记忆</button>
+ <h2 style="margin-top:18px">目标 mask 与放置区域</h2>
+ <button id="sam-point">用选点运行 SAM 2.1（CPU）</button>
+ <div class="row region-controls"><label for="region-id">放置区 ID</label><input id="region-id" value="blue_tray" maxlength="60"><label for="half-x">半尺寸 X/Y（米）</label><input id="half-x" class="size-input" type="number" min="0.001" max="0.3" step="0.01" value="0.06"><input id="half-y" class="size-input" aria-label="放置区 Y 半尺寸" type="number" min="0.001" max="0.3" step="0.01" value="0.04"><button id="region-point">将选点标记为放置区中心</button></div>
+ <p class="hint">区域中心由选点深度和标定估计；半尺寸人工指定，不代表识别出的真实边界。换布局会清空记忆和放置区。</p>
+ <p class="hint">关节角单位为弧度。这里只编辑暂停的仿真姿态，不是运动轨迹控制；物体在重建布局时自由落稳。</p>
+ <details><summary>当前相机位姿与参数入口</summary><pre id="camera"></pre></details>
+ </section>
+</div>
+</main>
+<script>
+let state, sourceImage, selectedPoint=null, working=false;
+const $=id=>document.getElementById(id);
+function simplifyPage(){
+ const main=document.querySelector('main'),grids=main.querySelectorAll(':scope > .grid');
+ const camera=grids[0].children[0],overview=grids[0].children[1],task=grids[1].children[0],controls=grids[1].children[1];
+ const advanced=document.createElement('details');advanced.id='advanced';const summary=document.createElement('summary');summary.textContent='高级设置与调试';advanced.append(summary);main.append(advanced);
+ const extra=document.createElement('div');extra.className='grid';advanced.append(extra);
+ const settings=document.createElement('section');settings.className='panel';const heading=document.createElement('h2');heading.textContent='观察与模型设置';settings.append(heading);
+ settings.append(task.querySelector('label[for="decision-mode"]'),$('decision-mode'),$('prepare'),$('release'));
+ for(const hint of task.querySelectorAll(':scope > p.hint'))settings.append(hint);
+ const raw=task.querySelector(':scope > details');if(raw)settings.append(raw);
+ extra.append(settings,controls,$('memory-panel'));
+ const workspace=document.createElement('div');workspace.className='workspace-simple';main.append(workspace);workspace.append(camera,task);
+ const h1=main.querySelector('h1'),sub=main.querySelector(':scope > .sub');h1.textContent='告诉机器人，要拿哪一个。';sub.textContent='输入一句指令，点击开始。这里只测试任务理解，不执行抓取。';
+ task.querySelector('h2').textContent='你想让机器人做什么？';const quick=document.createElement('p');quick.className='quickstart';quick.textContent='第一次使用：点「试用示例」，再点「开始理解」。';task.querySelector('h2').after(quick);
+ const direction=document.createElement('p');direction.className='hint';direction.id='direction-note';direction.textContent='上下约定：离机械臂底座越远越靠上，越近越靠下；与画面高低无关。';task.querySelector('label[for="instruction"]').before(direction);
+ task.querySelectorAll('h2')[1].textContent='理解结果';$('infer').textContent='开始理解';$('infer').after($('status'));
+ const secondary=document.createElement('div');secondary.className='secondary-simple';$('demo').textContent='试用示例';$('next').textContent='换个场景';$('scan').textContent='观察一圈';secondary.append($('scan'),$('demo'),$('next'));task.append(secondary);
+ task.querySelectorAll('.examples button').forEach((button,index)=>{if(index>1)button.remove();});
+ camera.querySelector('h2').id='view-title';camera.querySelector('h2').textContent='相机画面';const help=camera.querySelector('.hint');help.id='source-label';help.textContent='点击开始后，会自动观察多个视角。';
+ const observations=document.createElement('details');observations.id='observations';const label=document.createElement('summary');label.textContent='查看已观察的画面';observations.append(label,$('keyframes'));camera.append(observations);
+ settings.append($('gpu'));
+ overview.id='third-person-view';overview.querySelector('h2').textContent='第三人称全景';overview.querySelector('.hint').textContent='供你观察机械臂和场景，不发送给千问。';
+ const views=document.createElement('div');views.className='live-views';camera.append(views);const wrist=document.createElement('div');views.append(wrist);wrist.append(camera.querySelector('h2'),$('rgb'),$('frame'),$('point-label'),help);views.append(overview);camera.append(observations);
+ main.replaceChildren(h1,sub,workspace,advanced);
+ document.title='腕部相机 · 指令测试';
+}
+function busy(value,text){working=value;document.querySelectorAll('button,input,textarea,select').forEach(b=>b.disabled=value);if(text)$('status').textContent=text;}
+async function request(path,data){
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),path.endsWith('/infer')?190000:20000);
+ try{const response=await fetch(path,{...(data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),signal:controller.signal});const result=await response.json();if(!response.ok||result.error)throw new Error(result.error||'请求失败');return result;}
+ catch(error){if(error.name==='AbortError')throw Error('连接超时，请稍后重试。后台若仍在运行，会显示忙碌状态。');throw error;}
+ finally{clearTimeout(timeout);}
+}
+function gpu(loaded){$('gpu').textContent=loaded?'千问进程已启动，可继续测试':'模型未加载，未占用推理显存';}
+function memory(m){
+ state.multiframe=m;const s=m.snapshot;$('keyframes').replaceChildren();$('memory-objects').replaceChildren();
+ if(!s){$('memory-count').textContent='暂无观测';$('memory-status').textContent='先采集腕部画面或载入样例。';return;}
+ $('memory-count').textContent=`${m.keyframes.length} 张关键帧 · ${s.objects.length} 个历史实例 · 版本 ${s.memory_version}`;
+ const synthetic=m.source==='synthetic_two_views';$('memory-status').className=synthetic?'memory-note':'';
+ $('memory-status').textContent=(synthetic?'合成双视角样例：图片、深度、mask 均为测试夹具，未运行 SAM。当前上方腕部画面不属于此样例。':'腕部 RGB-D 观测：无 SAM mask 的画面使用未分类几何候选，可能包含容器或机械臂。')+` ${s.coverage.survey_complete?'配置视角已采样。':'缺少或过期视角：'+s.coverage.missing_views.join('、')+'。'}`;
+ for(const [index,frame] of m.keyframes.entries()){const card=document.createElement('div');card.className='keyframe';card.dataset.instances=JSON.stringify(frame.instance_ids);const image=document.createElement('img');image.src=frame.rgb;image.alt='第'+(index+1)+'个观察画面';const label=document.createElement('p');label.textContent=({left:'左侧观察位',center:'中间观察位',right:'右侧观察位'}[frame.view_id]||`观察画面 ${index+1}`);card.append(image,label);$('keyframes').append(card);}
+ for(const obj of s.objects){const row=document.createElement('tr');for(const value of [obj.instance_id+' · '+obj.identity_status,obj.currently_visible?'当前帧可见':'历史记忆',obj.age_s.toFixed(1)+' 秒',obj.last_observed_center_base_m.map(x=>x.toFixed(3)).join(', '),obj.observed_extent_base_m.map(x=>x.toFixed(3)).join(', ')]){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}$('memory-objects').append(row);}
+ $('region-list').textContent=s.regions.length?'可用放置区：'+s.regions.map(r=>r.region_id).join('、'):'尚未设置放置区：请在腕部图像中点选托盘中心并标记，或使用带区域的合成样例。';
+}
+async function show(s){state=s;selectedPoint=null;$('point-label').textContent='';$('view-id').value=s.view_id;gpu(s.model_loaded);memory(s.multiframe);$('seed').value=s.seed;$('frame').textContent=`当前场景 ${s.seed}`;$('overview').src=s.overview;sourceImage=new Image();sourceImage.src=s.rgb;await sourceImage.decode();const canvas=$('rgb');canvas.width=sourceImage.width;canvas.height=sourceImage.height;canvas.getContext('2d').drawImage(sourceImage,0,0);const demo=s.multiframe.source==='synthetic_two_views';canvas.hidden=demo;$('observations').open=demo||s.multiframe.keyframes.length>1;$('view-title').textContent=demo?'双视角示例':'相机画面';$('source-label').textContent=demo?'两张合成图片各有一个柿子；右侧为当前仿真场景。':'点「观察一圈」，可看到机械臂姿态和相机视野同步变化。';$('third-person-view').querySelector('h2').textContent=demo?'当前仿真全景（非示例）':'第三人称全景';$('result').textContent='写下你的指令，然后点击「开始理解」。';$('resultLabel').textContent='等待开始';$('details').textContent='';$('camera').textContent=JSON.stringify({mount:s.mount,parent_body:s.parent_body,T_base_camera:s.T_base_camera,calibration:'config/vlm/wrist_camera.yaml 中的 hand_eye_config',panel:'config/vlm/wrist_camera.yaml',frame_path:s.frame_path},null,2);
+ $('joints').replaceChildren();s.q.forEach((v,i)=>{const row=document.createElement('div');row.className='joint';const label=document.createElement('label');label.textContent=`J${i+1}`;label.htmlFor=`q${i}`;const slider=document.createElement('input');slider.type='range';slider.min=s.limits[i][0];slider.max=s.limits[i][1];slider.step=.01;slider.value=v;slider.setAttribute('aria-label',`关节${i+1}滑块`);const number=document.createElement('input');number.type='number';number.id=`q${i}`;number.min=slider.min;number.max=slider.max;number.step=.01;number.value=Number(v).toFixed(4);slider.oninput=()=>number.value=slider.value;number.oninput=()=>slider.value=number.value;row.append(label,slider,number);$('joints').append(row);});
+}
+async function action(fn,text){busy(true,text);try{await fn();$('status').textContent='准备好了。';}catch(e){$('status').textContent='未能完成：'+e.message;$('resultLabel').textContent='这次没有得到有效结果';$('result').textContent='请查看上方提示。你也可以点「试用示例」先试一次。';}finally{busy(false);}}
+async function moveToPose(target,viewId){
+ const start=state.q.slice(),steps=4;
+ if(!Array.isArray(target)||target.length!==6||target.some((value,i)=>!Number.isFinite(value)||value<state.limits[i][0]||value>state.limits[i][1]))throw Error('观察姿态超出关节范围。');
+ for(let step=1;step<=steps;step++){
+  const q=start.map((value,i)=>value+(target[i]-value)*step/steps);
+  const next=await request('/api/pose',{q,view_id:viewId,remember:step===steps});
+  await show(next);
+ }
+}
+async function observeViews(){
+ const plan=state.scan_poses;
+ if(!plan?.length)throw Error('观察位置尚未加载，请刷新页面。');
+ for(const pose of plan){
+  $('status').textContent='正在转向'+({left:'左侧',right:'右侧',center:'中间'}[pose.view_id]||pose.view_id)+'，画面随相机更新…';
+  await moveToPose(pose.q,pose.view_id);
+ }
+}
+document.querySelectorAll('[data-text]').forEach(b=>b.onclick=()=>{$('instruction').value=b.dataset.text;});
+$('reset').onclick=()=>action(async()=>show(await request('/api/reset',{seed:Number($('seed').value)})),'正在重建场景…');
+$('next').onclick=()=>{$('seed').value=Number($('seed').value)+1;$('reset').click();};
+$('pose').onclick=()=>action(async()=>moveToPose(Array.from({length:6},(_,i)=>Number($(`q${i}`).value)),$('view-id').value),'正在调整仿真姿态…');
+$('capture').onclick=()=>action(async()=>show(await request('/api/capture',{view_id:$('view-id').value})),'正在采样腕部相机并更新记忆…');
+$('release').onclick=()=>action(async()=>{await request('/api/release',{});gpu(false);},'正在释放千问显存…');
+$('infer').onclick=()=>action(async()=>{if($('decision-mode').value==='multiframe'){
+ if(!$('instruction').value.trim())throw Error('先写一句你想让机器人做的事。');
+ const demo=state.multiframe.source==='synthetic_two_views';
+ if(demo)await show(await request('/api/multiframe/demo',{}));else await observeViews();
+ $('status').textContent='观察完成，正在理解你的指令…';
+ const r=await request('/api/multiframe/infer',taskRequest());gpu(r.model_loaded);memory(r.multiframe);const d=r.decision;
+ const names={ready:'已理解任务',need_observation:'还需要补充观察',ambiguous:'暂时无法确定目标',target_not_found:'没有找到目标'};
+ const regions={blue_tray:'蓝色托盘',red_tray:'红色托盘',green_tray:'绿色托盘',blue_region:'蓝色区域',red_region:'红色区域',green_region:'绿色区域',yellow_region:'黄色区域'};
+ $('resultLabel').textContent=`${names[d.status]} · ${r.metrics.request_s.toFixed(1)} 秒`;
+ const lines=d.actions.map((a,i)=>`${i+1}. ${a.target_instance_id.replace('obj_','物体 ')} → ${regions[a.destination_region_id]||a.destination_region_id}`);
+ $('result').textContent=d.message+(lines.length?'\n'+lines.join('\n'):'')+'\n\n这里只显示理解结果，还没有执行抓取。';
+ $('details').textContent=JSON.stringify(r,null,2);
+ const selected=new Set(d.actions.map(a=>a.target_instance_id));for(const card of $('keyframes').children){card.classList.toggle('target',JSON.parse(card.dataset.instances).some(id=>selected.has(id)));}
+ if(selected.size)$('observations').open=true;return;
+}const r=await request('/api/infer',{frame_id:state.frame_id,instruction:$('instruction').value});gpu(r.model_loaded);$('result').textContent=r.prediction?.status==='ready'?'已选中目标，红色标记显示选中的位置。':r.prediction?.status==='target_not_found'?'没有找到你说的目标。':'暂时无法确定，请换个视角或把指令说得更具体。';$('details').textContent=JSON.stringify(r,null,2);$('resultLabel').textContent=`理解完成 · ${r.metrics.request_s.toFixed(1)} 秒`;
+const ctx=$('rgb').getContext('2d');ctx.drawImage(sourceImage,0,0);if(r.prediction&&r.prediction.status==='ready'){const [x,y]=r.prediction.target_pixel_xy;ctx.strokeStyle='#ff4949';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-12,y);ctx.lineTo(x+12,y);ctx.moveTo(x,y-12);ctx.lineTo(x,y+12);ctx.stroke();ctx.fillStyle='yellow';ctx.beginPath();ctx.arc(x,y,3,0,2*Math.PI);ctx.fill();}},'正在调用千问；首次调用需要加载模型，请等待…');
+function taskRequest(){return {frame_id:state.frame_id,memory_version:state.multiframe.snapshot?.memory_version,instruction:$('instruction').value};}
+$('decision-mode').onchange=()=>{$('infer').textContent='开始理解';};
+$('scan').onclick=()=>action(observeViews,'正在观察周围…');
+$('memory-refresh').onclick=()=>action(async()=>{const s=await request('/api/state');memory(s.multiframe);gpu(s.model_loaded);},'正在刷新记忆年龄与覆盖状态…');
+$('memory-reset').onclick=()=>action(async()=>show(await request('/api/multiframe/reset',{})),'正在清空旧记忆…');
+$('demo').onclick=()=>action(async()=>{await show(await request('/api/multiframe/demo',{}));$('instruction').value='将最左边的柿子放入蓝色托盘。';$('decision-mode').value='multiframe';$('decision-mode').onchange();},'正在准备示例…');
+$('prepare').onclick=()=>action(async()=>{const r=await request('/api/multiframe/prepare',taskRequest());memory(r.multiframe);$('result').textContent=`多帧输入已保存：${r.image_count} 张关键帧。未加载模型、未执行推理。\n${r.request_path}`;$('resultLabel').textContent='输入检查通过 · 未执行动作';$('details').textContent=JSON.stringify(r,null,2);},'正在检查并保存多帧输入，不加载模型…');
+$('rgb').onclick=event=>{if(working||!sourceImage)return;const c=$('rgb'),rect=c.getBoundingClientRect();selectedPoint=[(event.clientX-rect.left)*c.width/rect.width,(event.clientY-rect.top)*c.height/rect.height];const ctx=c.getContext('2d');ctx.drawImage(sourceImage,0,0);ctx.strokeStyle='#80e8cf';ctx.lineWidth=3;ctx.beginPath();ctx.arc(...selectedPoint,9,0,2*Math.PI);ctx.stroke();$('point-label').textContent='选点：'+selectedPoint.map(Math.round).join(', ');};
+$('sam-point').onclick=()=>action(async()=>{if(!selectedPoint)throw Error('请先点击腕部画面中的物体。');await show(await request('/api/multiframe/sam',{frame_id:state.frame_id,point_xy:selectedPoint}));},'正在使用 CPU 运行 SAM 2.1，首次加载可能较慢…');
+$('region-point').onclick=()=>action(async()=>{if(!selectedPoint)throw Error('请先点击腕部画面中的托盘中心。');await show(await request('/api/multiframe/region',{frame_id:state.frame_id,point_xy:selectedPoint,region_id:$('region-id').value,half_size_xy_m:[Number($('half-x').value),Number($('half-y').value)]}));},'正在记录人工标记的放置区…');
+try{
+ simplifyPage();
+ action(async()=>show(await request('/api/state')),'正在连接相机…');
+}catch(error){
+ const message=document.createElement('p');message.setAttribute('role','alert');message.textContent='页面初始化失败，请刷新重试。错误：'+error.message;document.querySelector('main').prepend(message);
+}
+</script></html>

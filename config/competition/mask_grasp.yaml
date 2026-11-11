@@ -1,0 +1,20 @@
+schema_version: 1
+# Metres in robot base coordinates. Development values, pending real gripper checks.
+min_mask_pixels: 60
+min_depth_fraction: 0.65
+image_border_px: 3
+max_secondary_component_fraction: 0.10
+voxel_xy_m: 0.002
+elongation_eigenvalue_ratio: 1.8
+centerline_bins: 11
+finger_pad_length_m: 0.044
+opening_limit_m: 0.070
+opening_margin_m: 0.008
+minimum_observed_width_m: 0.008
+max_center_surface_gap_m: 0.006
+candidate_fractions: [0.50, 0.35, 0.65]
+# Local short-axis grasp is preferred; oblique alternatives must independently
+# pass the observed-width/opening gate before IK may use them.
+oblique_yaw_offsets_deg: [0, -15, 15, -30, 30, -45, 45]
+# Circular silhouettes have no reliable long axis; offer several orientations.
+round_object_yaws_rad: [0.0, 0.7853981634, 1.5707963268, 2.3561944902]

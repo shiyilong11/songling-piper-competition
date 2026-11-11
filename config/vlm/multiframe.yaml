@@ -1,0 +1,32 @@
+schema_version: 1
+required_views: [left, center, right]
+# Survey completion means these configured views were sampled, not that all
+# hidden objects or occluded table surfaces have been observed.
+require_survey_for_ready: true
+max_keyframes: 4
+keyframe_selection:
+  min_translation_m: 0.015
+  min_rotation_deg: 10.0
+  max_rgb_difference: 0.02
+  min_quality_gain: 0.25
+event_history_size: 8
+max_objects: 32
+min_object_points: 12
+association_radius_m: 0.05
+association_margin_m: 0.012
+max_chroma_distance: 0.20
+association_max_age_s: 30.0
+observation_max_age_s: 0.25
+memory_max_age_s: 30.0
+geometry_reset_distance_m: 0.01
+max_plan_position_change_m: 0.01
+max_plan_extent_change_m: 0.015
+max_fused_points: 1024
+left_axis_base: [0.0, 1.0, 0.0]
+upper_lower_reference: robot_base_horizontal_distance
+robot_reference_point_base_m: [0.0, 0.0, 0.0]
+relation_min_distance_gap_m: 0.02
+coordinate_source: "Development convention: base +Y is left; calibrate to competition rules."
+max_total_image_pixels: 614400
+min_image_pixels: 50176
+max_new_tokens: 1024

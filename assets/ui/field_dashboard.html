@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>PiPER 现场任务台</title>
+  <style>
+    :root { color-scheme: light; font: 14px Inter, "Noto Sans CJK SC", system-ui, sans-serif; color: #162727; background: #eaf0ed; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1740px; min-height: 100dvh; height: 100dvh; margin: auto; padding: 18px 22px;
+      display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 14px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(22px, 2.4vw, 32px); letter-spacing: -.035em; }
+    h2 { font-size: 15px; }
+    .subtitle, .muted, time { color: #526762; font-size: 12px; }
+    .subtitle { margin-top: 4px; }
+    .header-state { display: flex; gap: 16px; align-items: center; text-align: right; }
+    .header-state b { font-size: 18px; font-variant-numeric: tabular-nums; }
+    .connected { color: #1b664f; }
+    .stale { color: #a04823; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(318px, .46fr); gap: 14px; min-height: 0; }
+    .images { min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+    .card { min-width: 0; min-height: 0; border: 1px solid #d1ddd7; border-radius: 12px; background: #fff; }
+    .image-card { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden; }
+    .card-head { padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+    .screen { position: relative; display: grid; place-items: center; overflow: hidden; min-height: 0;
+      color: #c9d9d6; background: #172623; }
+    .screen img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+    [hidden] { display: none !important; }
+    .screen-note { padding: 12px; font-size: 13px; }
+    .mask-card { grid-column: 1 / -1; }
+    .legend { display: flex; align-items: center; gap: 6px; overflow-x: auto; padding: 6px 10px; white-space: nowrap; min-height: 32px; }
+    .legend span { border-radius: 6px; background: #e5efea; padding: 3px 6px; font-size: 11px; }
+    .depth-scale { width: min(35%, 138px); height: 7px; border-radius: 5px; background: linear-gradient(90deg,#301241,#466df6,#19d4cb,#a0fc3c,#ffd13d,#f66c19,#7a0403); }
+    .task { padding: 13px 15px; overflow: auto; display: flex; flex-direction: column; gap: 13px; }
+    .section { padding-top: 11px; border-top: 1px solid #dce5e1; }
+    .stage { color: #196850; font-size: 17px; font-weight: 700; margin-top: 5px; }
+    .plan { margin-top: 7px; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 12px; }
+    .plan dt { color: #526762; }
+    .plan dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    table { margin-top: 8px; width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    th, td { padding: 6px 4px; border-bottom: 1px solid #e1e9e5; }
+    th { color: #526762; font-weight: 600; white-space: nowrap; }
+    tr[data-active="true"] { background: #e5f5ec; }
+    .failure { color: #8f301e; padding: 8px; border-radius: 8px; background: #f9ece7; overflow-wrap: anywhere; }
+    @media (max-width: 800px) {
+      main { height: auto; padding: 12px; }
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .images { grid-template-rows: 220px 260px; }
+      .task { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1 id="title">PiPER 现场任务台</h1><p class="subtitle">腕部 RGB-D · 现场过程展示</p></div>
+    <div class="header-state"><span id="connection" class="stale">连接中</span><b id="clock">—</b></div>
+  </header>
+  <div class="layout">
+    <div class="images">
+      <section class="card image-card">
+        <div class="card-head"><h2>腕部 RGB</h2><time id="rgbStamp"></time></div>
+        <div class="screen"><img id="rgb" alt="腕部相机 RGB" hidden><p class="screen-note">等待相机画面</p></div>
+        <div class="legend" id="cameraNote"></div>
+      </section>
+      <section class="card image-card">
+        <div class="card-head"><h2>对齐深度</h2><time id="depthStamp"></time></div>
+        <div class="screen"><img id="depth" alt="腕部对齐深度伪彩" hidden><p class="screen-note">等待对齐深度</p></div>
+        <div class="legend"><small id="depthNear"></small><i class="depth-scale"></i><small id="depthFar"></small><small class="muted">黑色为无效深度</small></div>
+      </section>
+      <section class="card image-card mask-card">
+        <div class="card-head"><h2>分割结果</h2><time id="maskStamp"></time></div>
+        <div class="screen"><img id="mask" alt="识别帧上的实例分割叠图" hidden><p class="screen-note">等待分割结果</p></div>
+        <div id="regions" class="legend"></div>
+      </section>
+    </div>
+    <aside class="card task">
+      <div><h2>任务状态</h2><p id="stage" class="stage">等待连接</p><p id="counts" class="muted"></p></div>
+      <div class="section"><h2>当前抓放计划</h2><dl id="plan" class="plan"></dl></div>
+      <div class="section">
+        <h2>目标进度</h2>
+        <table aria-label="目标进度"><thead><tr><th>目标</th><th>类别</th><th>目的区</th><th>抓取</th><th>放置</th></tr></thead><tbody id="rows"></tbody></table>
+      </div>
+      <p id="failure" class="failure" hidden></p>
+    </aside>
+  </div>
+</main>
+<script>
+  const $ = id => document.getElementById(id);
+  const names = {red:"红",green:"绿",yellow:"黄",pear:"梨",banana:"香蕉",cucumber:"黄瓜",potato:"土豆",persimmon:"柿子",bell_pepper:"彩椒",orange_brown:"橙棕",yellow_green:"黄绿",other:"其他",unknown:"不确定"};
+  const label = value => names[value] || value;
+  const zone = value => value ? label(value) + "区" : "—";
+  const seconds = value => Number.isFinite(value) ? value.toFixed(2) + " s" : "—";
+  const xy = value => Array.isArray(value) ? value.map(x => Math.round(x * 1000)).join(" / ") + " mm" : "—";
+  const el = (tag, value) => { const node = document.createElement(tag); node.textContent = value; return node; };
+  function showImage(id, source, stamp) {
+    const image = $(id);
+    if (!source) {
+      image.hidden = true;
+      image.nextElementSibling.hidden = false;
+      delete image.dataset.stamp;
+      return;
+    }
+    if (image.dataset.stamp !== String(stamp)) {
+      image.src = source;
+      image.dataset.stamp = stamp;
+    }
+    image.hidden = false;
+    image.nextElementSibling.hidden = true;
+  }
+  function update(s) {
+    const { camera, segmentation, plan, rows = [] } = s;
+    $("title").textContent = s.title || "PiPER 现场任务台";
+    $("clock").textContent = seconds(s.elapsed_s) + " / " + (s.limit_s ?? "—") + " s";
+    $("stage").textContent = s.stage || "等待工位反馈";
+    $("counts").textContent = s.total ? "已识别 " + s.identified + "/" + s.total + " · 放置复查 " + s.verified + "/" + s.total : "";
+    const cameraOk = camera && s.camera_age_s < 1.0 && !s.camera_error;
+    $("connection").className = cameraOk ? "connected" : "stale";
+    $("connection").textContent = cameraOk ? "相机在线" : camera ? "画面暂停 · 保留末帧" : "等待相机";
+    if (camera) {
+      showImage("rgb", camera.rgb, camera.stamp_s);
+      showImage("depth", camera.depth, camera.stamp_s);
+      $("rgbStamp").textContent = $("depthStamp").textContent = "同帧 " + seconds(camera.stamp_s);
+    } else {
+      showImage("rgb"); showImage("depth");
+      $("rgbStamp").textContent = $("depthStamp").textContent = "";
+    }
+    $("cameraNote").textContent = s.camera_error || (camera ? "有效深度 " + Math.round(camera.valid_fraction * 100) + "%" : "");
+    $("depthNear").textContent = s.depth_range_m[0].toFixed(2) + " m";
+    $("depthFar").textContent = s.depth_range_m[1].toFixed(2) + " m";
+    if (segmentation) {
+      showImage("mask", segmentation.image, segmentation.stamp_s);
+      $("maskStamp").textContent = "识别帧 " + seconds(segmentation.stamp_s);
+      $("regions").replaceChildren(...segmentation.regions.map(r => el("span", r.number + " " + label(r.label) + " · " + zone(r.destination))));
+    } else {
+      showImage("mask");
+      $("maskStamp").textContent = "";
+      $("regions").replaceChildren();
+    }
+    $("plan").replaceChildren(...(plan ? [
+      ["目标", (plan.target_id || "—") + " · " + label(plan.category)],
+      ["目的区", zone(plan.destination)], ["抓取点", xy(plan.pick_m)], ["释放点", xy(plan.place_m)],
+      ["坐标系", "机械臂基座"], ["计划来源", seconds(plan.source_s)],
+    ] : [["计划", "等待有效抓放路径"]]).flatMap(([key, value]) => [el("dt", key), el("dd", value)]));
+    $("rows").replaceChildren(...rows.map(row => {
+      const tr = document.createElement("tr");
+      tr.dataset.active = row.target_id === s.active;
+      tr.append(...[row.target_id, row.identified ? label(row.category) : "待识别", zone(row.destination), row.grasp, row.placement].map(v => el("td", v)));
+      return tr;
+    }));
+    $("failure").hidden = !s.failure;
+    $("failure").textContent = s.failure || "";
+  }
+  async function poll() {
+    try {
+      const response = await fetch("/api/state", {cache:"no-store"});
+      if (!response.ok) throw Error(response.status);
+      update(await response.json());
+    } catch {
+      $("connection").className = "stale";
+      $("connection").textContent = "现场服务未连接";
+    }
+    setTimeout(poll, 350);
+  }
+  poll();
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+{
+  "method": "Manually authored parametric geometry and procedural albedo, visually guided by RGB",
+  "metric_dimensions": "Preserved existing provisional catalog bounding dimensions, not measured from video",
+  "collision": "Convex decomposition along long axis; thin calyx leaves and stems visual only",
+  "models": [
+    {
+      "category": "pear",
+      "extents_m": [
+        0.049683440346423774,
+        0.075,
+        0.04902418993579215
+      ],
+      "triangles": 20296,
+      "collision_pieces": 3,
+      "files": [
+        {
+          "path": "assets/competition/video_reference_20261111/pear/visual.obj",
+          "sha256": "2974e23a5f525261fc04838521c944299912464e48fa8d1630f35bfde5008ed9"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/pear/texture.png",
+          "sha256": "c2ea1e2823d301ac5cc7e3df235fc4a8ee9ba8acda055714ae974352c3adec99"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/pear/collision_0.obj",
+          "sha256": "cb877f84175a7acb90573d4d7c6aa76fb207fcb5711fe95e635beb570d0c4298"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/pear/collision_1.obj",
+          "sha256": "62edbc10c61d2e468d6e8ae41620b65a8a0c7007a5e86de94cd0e61139fd1ab6"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/pear/collision_2.obj",
+          "sha256": "7ca3f8c05b0812e92ab6925d6a85c950f5cbe4d28739c03bb4a6954a680a9910"
+        }
+      ]
+    },
+    {
+      "category": "banana",
+      "extents_m": [
+        0.07326007161790338,
+        0.12,
+        0.024706495486054685
+      ],
+      "triangles": 20368,
+      "collision_pieces": 7,
+      "files": [
+        {
+          "path": "assets/competition/video_reference_20261111/banana/visual.obj",
+          "sha256": "04784b4620867200108301ec9f24aa3e0d50c0147d988afb7c175d20eb3bc818"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/texture.png",
+          "sha256": "970970891385324b7a19df33a26c719b3f27d7cf76e2020661a7d24d1aa1cba0"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_0.obj",
+          "sha256": "81d7c18c9eb068abf9142f869b5d8c66055a26dbb66a6b8c61e6de4e8763311e"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_1.obj",
+          "sha256": "ce5ea4cd65481290b1bdef47b12be4a479ca0f7d3556c948ead1044469689122"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_2.obj",
+          "sha256": "16a96f2d63fd18c92964f903503a3cbdf288300bd6114665b749831b3157c587"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_3.obj",
+          "sha256": "97c4dafbf68e38c01c0946ce7c2300dbe2d31195d7da1f4e2cf7d9e69fb2fea7"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_4.obj",
+          "sha256": "eb4c6da538a4eacac69629fe7d281046637d8a94264927fc78b1afb6cdea8e0f"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_5.obj",
+          "sha256": "62b26740abe96c442ed0bbb73d5c2f4893e60ebdfb3cd671df2c6bce800addfe"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/banana/collision_6.obj",
+          "sha256": "90a115a35c3e1c594117cb739fc41c2a3b9a79c2452545f99989e700704ea4b9"
+        }
+      ]
+    },
+    {
+      "category": "persimmon",
+      "extents_m": [
+        0.065,
+        0.065,
+        0.04700000000000001
+      ],
+      "triangles": 22888,
+      "collision_pieces": 1,
+      "files": [
+        {
+          "path": "assets/competition/video_reference_20261111/persimmon/visual.obj",
+          "sha256": "d0857962c061905a812c5ffe8c03305b024df4bbb63f7776cc8899f648292ac9"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/persimmon/texture.png",
+          "sha256": "087e5074d8438acc7e3a205b12426d3ba9b8807aed6a95e7dab727000a8604b2"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/persimmon/collision_0.obj",
+          "sha256": "2d95a32f1c667a49bbbfe5daf5be80778059c5076d3cfa7a321dd6b04eb457ac"
+        }
+      ]
+    },
+    {
+      "category": "bell_pepper",
+      "extents_m": [
+        0.061,
+        0.061,
+        0.07
+      ],
+      "triangles": 20344,
+      "collision_pieces": 1,
+      "files": [
+        {
+          "path": "assets/competition/video_reference_20261111/bell_pepper/visual.obj",
+          "sha256": "ddf08d830932568015f3a9bf079982ad79e37fd59b9ee8f9f348cace3a27e129"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/bell_pepper/texture.png",
+          "sha256": "3c4730fdb8632a634152cac4d568334ae4be56b752af759653fdda99218ed10f"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/bell_pepper/collision_0.obj",
+          "sha256": "757d5777d18a9872e20e270cc02a482bb4304000047db0582b706e3968a1595c"
+        }
+      ]
+    },
+    {
+      "category": "cucumber",
+      "extents_m": [
+        0.145,
+        0.033,
+        0.032
+      ],
+      "triangles": 20224,
+      "collision_pieces": 6,
+      "files": [
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/visual.obj",
+          "sha256": "1c58974a1d06a6c2ad38c80fd71683a3783f77f8e0986bac26b48504fa1480d6"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/texture.png",
+          "sha256": "768ba881e31f1822c82bb130970d224daa616301d641e4f59758bd3d1b0f3f09"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/collision_0.obj",
+          "sha256": "c3f9aa62ee88851747507f5cd169fbd8a622326643c57df38792cb030bfb8ff5"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/collision_1.obj",
+          "sha256": "bea8bf74ecf17da46e0120fe7e614fbd6f87a9edd95a4a1628577d952bcfd2aa"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/collision_2.obj",
+          "sha256": "e21dd0ac93911b8d03b9e3ac3adc14cc2e28eb41844c7c87a3dbfa72bd6de79a"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/collision_3.obj",
+          "sha256": "5d7e74d3d1bfa79395e235266397cfc2bf525964cff594581c719acf4925388c"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/collision_4.obj",
+          "sha256": "0055db2d23ffe1fb2e81e0dbf95fccf2cbc1c1378403f6ce7dee2d07f0053539"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/cucumber/collision_5.obj",
+          "sha256": "2f9aaec4f82895b871c1bc0de43f97671892d061115dbc4c63a3870179879ee7"
+        }
+      ]
+    },
+    {
+      "category": "potato",
+      "extents_m": [
+        0.08,
+        0.054,
+        0.049
+      ],
+      "triangles": 20224,
+      "collision_pieces": 1,
+      "files": [
+        {
+          "path": "assets/competition/video_reference_20261111/potato/visual.obj",
+          "sha256": "85da1e7d50edc1362f40337dff3b009c499648531c27dcf3cfb61e31e1ad4d62"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/potato/texture.png",
+          "sha256": "7d6576644bfde40303bde5228d07f43e05603c7097c559ec096fcab5c3ec1afe"
+        },
+        {
+          "path": "assets/competition/video_reference_20261111/potato/collision_0.obj",
+          "sha256": "9106bbfb68e5df014ca3781c40ac50c6d980cd65a50235274839274f7da8095d"
+        }
+      ]
+    }
+  ]
+}

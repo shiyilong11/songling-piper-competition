@@ -1,0 +1,14 @@
+schema_version: 1
+model: sam3.1_native_detector_single_frame
+repo_id: facebook/sam3.1
+revision: daa63191845a41281374e725f4c9e51c7a824460
+checkpoint: models/sam3.1/sam3.1_multiplex.pt
+expected_sha256: 0567debeec80ba4ac6369540c6c248025283cb3ff2b92827509e57e2b3541cb6
+mirror_repo_id: AEmotionStudio/sam3.1
+mirror_revision: 694239a1479aab8fd1317c87c433c58acd7c6eab
+source_commit: f1647e8d0c1d280991f4d1b7d974c2704537fe66
+device: cuda:0
+min_free_vram_mib: 12288
+confidence_threshold: 0.5
+timeout_s: 180
+max_output_masks: 30

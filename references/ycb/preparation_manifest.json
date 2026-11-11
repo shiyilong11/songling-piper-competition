@@ -1,0 +1,334 @@
+[
+  {
+    "category": "banana",
+    "source_id": "011_banana",
+    "source_bounds_m": [
+      [
+        -0.042995,
+        -0.096567,
+        -0.000407
+      ],
+      [
+        0.065947,
+        0.08188,
+        0.036333
+      ]
+    ],
+    "uniform_scale": 0.6724685761038292,
+    "prepared_extents_m": [
+      0.07326007161790336,
+      0.12,
+      0.024706495486054685
+    ],
+    "collision_pieces": 6,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/banana/visual.obj",
+        "sha256": "89b6f5888d2cbf34cabe48c3e2c050093ce9d23976a75f9d57dda9ccf559c045"
+      },
+      {
+        "path": "assets/competition/ycb/banana/texture.png",
+        "sha256": "a5d70629ee8cff461e25f5c0aa87651746e3c9e405674dc6a20446f824d9d97a"
+      },
+      {
+        "path": "assets/competition/ycb/banana/collision_0.obj",
+        "sha256": "a536feb55749a4b821a64c6a6cdf9d1d006e830823acb52d500322cb2527a42a"
+      },
+      {
+        "path": "assets/competition/ycb/banana/collision_1.obj",
+        "sha256": "2c6475e7e3eaf7584f49f9f53d208bcab15d2af95e1eab31930cc6d974cb710b"
+      },
+      {
+        "path": "assets/competition/ycb/banana/collision_2.obj",
+        "sha256": "778d3330f9f0490523f87ed44ef9890b1feca2b4b1cd2b5dcce6f867f7051b6e"
+      },
+      {
+        "path": "assets/competition/ycb/banana/collision_3.obj",
+        "sha256": "5005b3d575dfe466b9d15cddc0bece1a79a1fc6120b4b1820396f60e44672ad1"
+      },
+      {
+        "path": "assets/competition/ycb/banana/collision_4.obj",
+        "sha256": "a9d5ce598c6f033b83bf6cdd24a6935cad254eb68378a8a660abd06db4244607"
+      },
+      {
+        "path": "assets/competition/ycb/banana/collision_5.obj",
+        "sha256": "8940354ff4bf466fdc1a7964b0f9082676029bb4a7af9cc907fa174b874ff2c7"
+      }
+    ]
+  },
+  {
+    "category": "apple",
+    "source_id": "013_apple",
+    "source_bounds_m": [
+      [
+        -0.036865,
+        -0.04122,
+        -0.000393
+      ],
+      [
+        0.038583,
+        0.033651,
+        0.071496
+      ]
+    ],
+    "uniform_scale": 0.7289788993744035,
+    "prepared_extents_m": [
+      0.055,
+      0.05457937917506096,
+      0.052405564097126496
+    ],
+    "collision_pieces": 1,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/apple/visual.obj",
+        "sha256": "c71716abb5c315c8e1f452e8005595533df6448e3d65568554e80dc514a91027"
+      },
+      {
+        "path": "assets/competition/ycb/apple/texture.png",
+        "sha256": "6fa13963ac7fec6d4819b6ebf0e4c5d54c6f339d5d7174ae5230f36abec30d56"
+      },
+      {
+        "path": "assets/competition/ycb/apple/collision_0.obj",
+        "sha256": "cd3ef584320f92994ba469cd2719385313e5facb19eff38f66c7deb678e71bab"
+      }
+    ]
+  },
+  {
+    "category": "lemon",
+    "source_id": "014_lemon",
+    "source_bounds_m": [
+      [
+        -0.040873,
+        -0.007996,
+        -0.000235
+      ],
+      [
+        0.019715,
+        0.051303,
+        0.052782
+      ]
+    ],
+    "uniform_scale": 0.9077705156136529,
+    "prepared_extents_m": [
+      0.055,
+      0.053829883805374,
+      0.04812726942628903
+    ],
+    "collision_pieces": 1,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/lemon/visual.obj",
+        "sha256": "f2f18e906a3df3f5aaa37ae60c80c8f09f0c9049d61d54fe375645545f0d0774"
+      },
+      {
+        "path": "assets/competition/ycb/lemon/texture.png",
+        "sha256": "f294a437412cc1189ea92f32666c329da748ddfeaac22b9e472b8d47fb711eaa"
+      },
+      {
+        "path": "assets/competition/ycb/lemon/collision_0.obj",
+        "sha256": "7ede49bffc2fd58a005b423371c08c50cb39ddc43466a4bb15b752f3560d6f41"
+      }
+    ]
+  },
+  {
+    "category": "pear",
+    "source_id": "016_pear",
+    "source_bounds_m": [
+      [
+        -0.066593,
+        -0.032233,
+        -0.000179
+      ],
+      [
+        -4.7e-05,
+        0.068222,
+        0.065484
+      ]
+    ],
+    "uniform_scale": 0.7466029565477079,
+    "prepared_extents_m": [
+      0.049683440346423774,
+      0.075,
+      0.04902418993579215
+    ],
+    "collision_pieces": 3,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/pear/visual.obj",
+        "sha256": "286773f303b58a0f7862736fee8d465c55aba2c92e77befc61599b17e5a7c2a7"
+      },
+      {
+        "path": "assets/competition/ycb/pear/texture.png",
+        "sha256": "e40fa29cd2dbd6e21f07d444b33be7165a22a903d8ce1b882faaa9a98c89d1fb"
+      },
+      {
+        "path": "assets/competition/ycb/pear/collision_0.obj",
+        "sha256": "70442725727b77c46973f1e95eb237d3f8375632c8816cb934e0423b9ab2d399"
+      },
+      {
+        "path": "assets/competition/ycb/pear/collision_1.obj",
+        "sha256": "ddd5c42789c79cf987a3975eff78d9fa1369dbc56c295962443bc90ead787d6e"
+      },
+      {
+        "path": "assets/competition/ycb/pear/collision_2.obj",
+        "sha256": "31e67bac84fa056da4f8d92cb7a43f3232aee69e1567c84eae93d8dab8bf91b9"
+      }
+    ]
+  },
+  {
+    "category": "orange",
+    "source_id": "017_orange",
+    "source_bounds_m": [
+      [
+        -0.043014,
+        -0.055353,
+        -0.000248
+      ],
+      [
+        0.029144,
+        0.018633,
+        0.071104
+      ]
+    ],
+    "uniform_scale": 0.7433838834374071,
+    "prepared_extents_m": [
+      0.053641094261076425,
+      0.055,
+      0.05304192685102587
+    ],
+    "collision_pieces": 1,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/orange/visual.obj",
+        "sha256": "e2df556ad381408f004bd65482e98e6a817e3465cf201e24e1323a859aafd2d5"
+      },
+      {
+        "path": "assets/competition/ycb/orange/texture.png",
+        "sha256": "1883140124b124c0f9ff5856049efdb20d5bf570b9eb66beb502af6b589bee0a"
+      },
+      {
+        "path": "assets/competition/ycb/orange/collision_0.obj",
+        "sha256": "31d63239aed9a6c6695e3fde072841ab7cacfad1b46a327bc0178e62ef9a3bbf"
+      }
+    ]
+  },
+  {
+    "category": "strawberry",
+    "source_id": "012_strawberry",
+    "source_bounds_m": [
+      [
+        -0.023475,
+        -0.006866,
+        -0.000217
+      ],
+      [
+        0.021749,
+        0.03842,
+        0.045458
+      ]
+    ],
+    "uniform_scale": 0.9852216748768472,
+    "prepared_extents_m": [
+      0.044555665024630535,
+      0.04461674876847291,
+      0.045
+    ],
+    "collision_pieces": 1,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/strawberry/visual.obj",
+        "sha256": "71f823c1b45a546e212e52e9f21a3cdf20a4482ff262c29520318f846c3075f5"
+      },
+      {
+        "path": "assets/competition/ycb/strawberry/texture.png",
+        "sha256": "3dc2027dbc259959ae1c84b0e34257fdf2aa5a9ebef332fad74a7ede63cf8e8c"
+      },
+      {
+        "path": "assets/competition/ycb/strawberry/collision_0.obj",
+        "sha256": "e492d8d591a2eb7b5755117533f811e75981c623ede21c568ddc77b04d911529"
+      }
+    ]
+  },
+  {
+    "category": "peach",
+    "source_id": "015_peach",
+    "source_bounds_m": [
+      [
+        -0.045332,
+        -0.025683,
+        -0.000215
+      ],
+      [
+        0.016791,
+        0.036949,
+        0.05843
+      ]
+    ],
+    "uniform_scale": 0.8781453570060033,
+    "prepared_extents_m": [
+      0.05455302401328394,
+      0.055,
+      0.051498834461617064
+    ],
+    "collision_pieces": 1,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/peach/visual.obj",
+        "sha256": "bb73c3ee4597dbbad515df106b8b1e669b9a55640f837574b237ac714e140a0a"
+      },
+      {
+        "path": "assets/competition/ycb/peach/texture.png",
+        "sha256": "727447ee12987673571b3712c2a577a36b621814789a873fd98e95fa55f6ddad"
+      },
+      {
+        "path": "assets/competition/ycb/peach/collision_0.obj",
+        "sha256": "2e4f506c229220a5e1fd90d38f69a4cb47e9be71fd7fb809d0b47fb0c8eb10c9"
+      }
+    ]
+  },
+  {
+    "category": "plum",
+    "source_id": "018_plum",
+    "source_bounds_m": [
+      [
+        -0.036413,
+        -0.008047,
+        -0.000297
+      ],
+      [
+        0.020777,
+        0.046894,
+        0.052743
+      ]
+    ],
+    "uniform_scale": 0.7868508480503583,
+    "prepared_extents_m": [
+      0.045,
+      0.04323037244273474,
+      0.041734568980591004
+    ],
+    "collision_pieces": 1,
+    "transform": "(source_vertex - source_bounds_center) * uniform_scale",
+    "files": [
+      {
+        "path": "assets/competition/ycb/plum/visual.obj",
+        "sha256": "391bf62132780a7567ab59c3745d0f6a73e5e563f457d01debb187facb8c0c4b"
+      },
+      {
+        "path": "assets/competition/ycb/plum/texture.png",
+        "sha256": "16dc04791daa9984fbc02b252619b882eb25ad595db2def10698e11098132d57"
+      },
+      {
+        "path": "assets/competition/ycb/plum/collision_0.obj",
+        "sha256": "3f3bf082d2e1a7f82adca231561488909886c796610d8841a0e97f85cc1c5ee3"
+      }
+    ]
+  }
+]

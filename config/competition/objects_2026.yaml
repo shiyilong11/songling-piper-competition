@@ -1,0 +1,529 @@
+schema_version: 1
+status: video_guided_original_meshes_provisional_dimensions_20261111
+objects:
+  cube_red:
+    source: 'FAQ: nominal 50 mm; tolerance applied by scene scale range'
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    parts:
+    - type: box
+      size:
+      - 0.025
+      - 0.025
+      - 0.025
+      pos:
+      - 0
+      - 0
+      - 0
+      rgba:
+      - 0.72
+      - 0.025
+      - 0.025
+      - 1
+  cube_green:
+    source: 'FAQ: nominal 50 mm; tolerance applied by scene scale range'
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    parts:
+    - type: box
+      size:
+      - 0.025
+      - 0.025
+      - 0.025
+      pos:
+      - 0
+      - 0
+      - 0
+      rgba:
+      - 0.1
+      - 0.45
+      - 0.035
+      - 1
+  cube_blue:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    parts:
+    - type: box
+      size:
+      - 0.0175
+      - 0.0175
+      - 0.0175
+      pos:
+      - 0
+      - 0
+      - 0
+      rgba:
+      - 0.035
+      - 0.15
+      - 0.8
+      - 1
+  apple:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/ycb/apple/visual.obj
+      texture: assets/competition/ycb/apple/texture.png
+      bounds_m:
+      - - -0.0275
+        - -0.02728968958753048
+        - -0.026202782048563245
+      - - 0.0275
+        - 0.02728968958753048
+        - 0.02620278204856325
+    collision_meshes:
+    - file: assets/competition/ycb/apple/collision_0.obj
+      volume_m3: 9.760455919936189e-05
+      bounds_m:
+      - - -0.0275
+        - -0.02728968958753048
+        - -0.026202782048563245
+      - - 0.0275
+        - 0.02728968958753048
+        - 0.02620278204856325
+    source_id: 013_apple
+    source_uniform_scale: 0.7289788993744035
+  pear:
+    source: original parametric mesh guided by user competition videos; not an official
+      scan
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/video_reference_20261111/pear/visual.obj
+      texture: assets/competition/video_reference_20261111/pear/texture.png
+      bounds_m:
+      - - -0.024841720173211887
+        - -0.0375
+        - -0.024512094967896074
+      - - 0.024841720173211887
+        - 0.0375
+        - 0.024512094967896074
+      material:
+        specular: 0.24
+        shininess: 0.3
+    collision_meshes:
+    - file: assets/competition/video_reference_20261111/pear/collision_0.obj
+      volume_m3: 3.248866291963826e-05
+      bounds_m:
+      - - -0.02483087446901833
+        - -0.0375
+        - -0.024491587847408663
+      - - 0.024817072541587628
+        - -0.013054846499113705
+        - 0.024491587847408663
+    - file: assets/competition/video_reference_20261111/pear/collision_1.obj
+      volume_m3: 4.612879256870703e-05
+      bounds_m:
+      - - -0.024841720173211887
+        - -0.016933717129861834
+        - -0.024512094967896074
+      - - 0.024841720173211887
+        - 0.010122065698398216
+        - 0.024512094967896074
+    - file: assets/competition/video_reference_20261111/pear/collision_2.obj
+      volume_m3: 2.0909634511798954e-05
+      bounds_m:
+      - - -0.021898280284025528
+        - 0.006136038815656234
+        - -0.02154928045944521
+      - - 0.021775200186270216
+        - 0.03152494099115569
+        - 0.02154928045944521
+  banana:
+    source: original parametric mesh guided by user competition videos; not an official
+      scan
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/video_reference_20261111/banana/visual.obj
+      texture: assets/competition/video_reference_20261111/banana/texture.png
+      bounds_m:
+      - - -0.03663003580895169
+        - -0.06
+        - -0.012353247743027342
+      - - 0.036630035808951696
+        - 0.06
+        - 0.012353247743027342
+      material:
+        specular: 0.24
+        shininess: 0.28
+    collision_meshes:
+    - file: assets/competition/video_reference_20261111/banana/collision_0.obj
+      volume_m3: 4.598661075039694e-06
+      bounds_m:
+      - - -0.011868381858583302
+        - -0.05663507686008528
+        - -0.009064886265272569
+      - - 0.030191418129573856
+        - -0.03821696763553714
+        - 0.009064886265272569
+    - file: assets/competition/video_reference_20261111/banana/collision_1.obj
+      volume_m3: 1.0836022789453507e-05
+      bounds_m:
+      - - -0.028635222553964477
+        - -0.042084403546992805
+        - -0.011277242994121663
+      - - 0.022482635961783137
+        - -0.021666985639281988
+        - 0.011277242994121665
+    - file: assets/competition/video_reference_20261111/banana/collision_2.obj
+      volume_m3: 1.3815667592248927e-05
+      bounds_m:
+      - - -0.03596630449824505
+        - -0.025576539425079352
+        - -0.012250616513205217
+      - - 0.009395493393714777
+        - -0.005098625374233319
+        - 0.012250616513205219
+    - file: assets/competition/video_reference_20261111/banana/collision_3.obj
+      volume_m3: 1.4637411043733173e-05
+      bounds_m:
+      - - -0.03663003580895169
+        - -0.009036183369377719
+        - -0.012353247743027342
+      - - 0.0023278375484582074
+        - 0.011399485895481776
+        - 0.012353247743027342
+    - file: assets/competition/video_reference_20261111/banana/collision_4.obj
+      volume_m3: 1.3815667592248927e-05
+      bounds_m:
+      - - -0.03596630449824505
+        - 0.007461927900337383
+        - -0.012250616513205217
+      - - 0.009395493393714783
+        - 0.02793984195118341
+        - 0.012250616513205219
+    - file: assets/competition/video_reference_20261111/banana/collision_5.obj
+      volume_m3: 1.0836022789453514e-05
+      bounds_m:
+      - - -0.028635222553964466
+        - 0.024030288165386045
+        - -0.011277242994121663
+      - - 0.022482635961783147
+        - 0.04444770607309687
+        - 0.011277242994121665
+    - file: assets/competition/video_reference_20261111/banana/collision_6.obj
+      volume_m3: 4.598661075039693e-06
+      bounds_m:
+      - - -0.011868381858583292
+        - 0.040580270161641216
+        - -0.009064886265272572
+      - - 0.030191418129573863
+        - 0.05899837938618935
+        - 0.009064886265272572
+  cucumber:
+    source: original parametric mesh guided by user competition videos; not an official
+      scan
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/video_reference_20261111/cucumber/visual.obj
+      texture: assets/competition/video_reference_20261111/cucumber/texture.png
+      bounds_m:
+      - - -0.0725
+        - -0.0165
+        - -0.016
+      - - 0.0725
+        - 0.0165
+        - 0.016
+      material:
+        specular: 0.33
+        shininess: 0.36
+    collision_meshes:
+    - file: assets/competition/video_reference_20261111/cucumber/collision_0.obj
+      volume_m3: 1.1043396873527644e-05
+      bounds_m:
+      - - -0.0725
+        - -0.015323940733649974
+        - -0.013303124298579017
+      - - -0.047084983503938305
+        - 0.012980174899480628
+        - 0.01423795142593709
+    - file: assets/competition/video_reference_20261111/cucumber/collision_1.obj
+      volume_m3: 1.7785040591629196e-05
+      bounds_m:
+      - - -0.04921305405113826
+        - -0.015796726965775887
+        - -0.01524844751410822
+      - - -0.02240373209218368
+        - 0.01563373210071016
+        - 0.01532987292382075
+    - file: assets/competition/video_reference_20261111/cucumber/collision_2.obj
+      volume_m3: 2.1415732131160507e-05
+      bounds_m:
+      - - -0.025093486638118234
+        - -0.016104628740245548
+        - -0.015884722059675407
+      - - 0.0028463366425324783
+        - 0.016436851514820338
+        - 0.01576059253701099
+    - file: assets/competition/video_reference_20261111/cucumber/collision_3.obj
+      volume_m3: 2.2341178860689272e-05
+      bounds_m:
+      - - -0.0028463366425324696
+        - -0.01636599718247776
+        - -0.016
+      - - 0.02509348663811824
+        - 0.0165
+        - 0.016
+    - file: assets/competition/video_reference_20261111/cucumber/collision_4.obj
+      volume_m3: 1.998877594580937e-05
+      bounds_m:
+      - - 0.02240373209218369
+        - -0.0165
+        - -0.015785084502025867
+      - - 0.04921305405113827
+        - 0.01622196497563598
+        - 0.015919356950197357
+    - file: assets/competition/video_reference_20261111/cucumber/collision_5.obj
+      volume_m3: 1.3322472221120082e-05
+      bounds_m:
+      - - 0.04708498350393831
+        - -0.016427854776244147
+        - -0.014270211670293426
+      - - 0.0725
+        - 0.014112321582882021
+        - 0.015446643667954035
+  orange:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/ycb/orange/visual.obj
+      texture: assets/competition/ycb/orange/texture.png
+      bounds_m:
+      - - -0.026820547130538212
+        - -0.0275
+        - -0.026520963425512935
+      - - 0.026820547130538212
+        - 0.0275
+        - 0.026520963425512935
+    collision_meshes:
+    - file: assets/competition/ycb/orange/collision_0.obj
+      volume_m3: 8.350943692570379e-05
+      bounds_m:
+      - - -0.026820547130538212
+        - -0.0275
+        - -0.026520963425512935
+      - - 0.026820547130538212
+        - 0.0275
+        - 0.026520963425512935
+    source_id: 017_orange
+    source_uniform_scale: 0.7433838834374071
+  lemon:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/ycb/lemon/visual.obj
+      texture: assets/competition/ycb/lemon/texture.png
+      bounds_m:
+      - - -0.0275
+        - -0.026914941902687
+        - -0.024063634713144516
+      - - 0.0275
+        - 0.026914941902687003
+        - 0.024063634713144516
+    collision_meshes:
+    - file: assets/competition/ycb/lemon/collision_0.obj
+      volume_m3: 7.304298236779484e-05
+      bounds_m:
+      - - -0.0275
+        - -0.026914941902687
+        - -0.024063634713144516
+      - - 0.0275
+        - 0.026914941902687003
+        - 0.024063634713144516
+    source_id: 014_lemon
+    source_uniform_scale: 0.9077705156136529
+  strawberry:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/ycb/strawberry/visual.obj
+      texture: assets/competition/ycb/strawberry/texture.png
+      bounds_m:
+      - - -0.022277832512315267
+        - -0.022308374384236454
+        - -0.022499999999999996
+      - - 0.022277832512315267
+        - 0.02230837438423645
+        - 0.0225
+    collision_meshes:
+    - file: assets/competition/ycb/strawberry/collision_0.obj
+      volume_m3: 4.765897881349016e-05
+      bounds_m:
+      - - -0.022277832512315267
+        - -0.022308374384236454
+        - -0.022499999999999996
+      - - 0.022277832512315267
+        - 0.02230837438423645
+        - 0.0225
+    source_id: 012_strawberry
+    source_uniform_scale: 0.9852216748768472
+  peach:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/ycb/peach/visual.obj
+      texture: assets/competition/ycb/peach/texture.png
+      bounds_m:
+      - - -0.02727651200664197
+        - -0.0275
+        - -0.025749417230808532
+      - - 0.02727651200664197
+        - 0.0275
+        - 0.025749417230808532
+    collision_meshes:
+    - file: assets/competition/ycb/peach/collision_0.obj
+      volume_m3: 8.045179109520469e-05
+      bounds_m:
+      - - -0.02727651200664197
+        - -0.0275
+        - -0.025749417230808532
+      - - 0.02727651200664197
+        - 0.0275
+        - 0.025749417230808532
+    source_id: 015_peach
+    source_uniform_scale: 0.8781453570060033
+  plum:
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/ycb/plum/visual.obj
+      texture: assets/competition/ycb/plum/texture.png
+      bounds_m:
+      - - -0.0225
+        - -0.02161518622136737
+        - -0.020867284490295502
+      - - 0.0225
+        - 0.021615186221367367
+        - 0.020867284490295502
+    collision_meshes:
+    - file: assets/competition/ycb/plum/collision_0.obj
+      volume_m3: 4.254190769834233e-05
+      bounds_m:
+      - - -0.0225
+        - -0.02161518622136737
+        - -0.020867284490295502
+      - - 0.0225
+        - 0.021615186221367367
+        - 0.020867284490295502
+    source_id: 018_plum
+    source_uniform_scale: 0.7868508480503583
+  cube_yellow:
+    source: 'FAQ: nominal 50 mm; tolerance applied by scene scale range'
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    parts:
+    - type: box
+      size:
+      - 0.025
+      - 0.025
+      - 0.025
+      pos:
+      - 0
+      - 0
+      - 0
+      rgba:
+      - 0.95
+      - 0.78
+      - 0.035
+      - 1
+  persimmon:
+    source: original parametric mesh guided by user competition videos; not an official
+      scan
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/video_reference_20261111/persimmon/visual.obj
+      texture: assets/competition/video_reference_20261111/persimmon/texture.png
+      bounds_m:
+      - - -0.0325
+        - -0.0325
+        - -0.023500000000000004
+      - - 0.0325
+        - 0.0325
+        - 0.023500000000000004
+      material:
+        specular: 0.3
+        shininess: 0.38
+    collision_meshes:
+    - file: assets/competition/video_reference_20261111/persimmon/collision_0.obj
+      volume_m3: 9.656317591704145e-05
+      bounds_m:
+      - - -0.0325
+        - -0.0325
+        - -0.023500000000000004
+      - - 0.0325
+        - 0.0325
+        - 0.018185577025002734
+  bell_pepper:
+    source: original parametric mesh guided by user competition videos; not an official
+      scan
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/video_reference_20261111/bell_pepper/visual.obj
+      texture: assets/competition/video_reference_20261111/bell_pepper/texture.png
+      bounds_m:
+      - - -0.0305
+        - -0.0305
+        - -0.035
+      - - 0.0305
+        - 0.0305
+        - 0.035
+      material:
+        specular: 0.42
+        shininess: 0.46
+    collision_meshes:
+    - file: assets/competition/video_reference_20261111/bell_pepper/collision_0.obj
+      volume_m3: 0.00011632106184243055
+      bounds_m:
+      - - -0.0305
+        - -0.0305
+        - -0.035
+      - - 0.0305
+        - 0.0305
+        - 0.0281233293801877
+  potato:
+    source: original parametric mesh guided by user competition videos; not an official
+      scan
+    mass_kg_range:
+    - 0.035
+    - 0.085
+    visual_mesh:
+      file: assets/competition/video_reference_20261111/potato/visual.obj
+      texture: assets/competition/video_reference_20261111/potato/texture.png
+      bounds_m:
+      - - -0.04
+        - -0.027
+        - -0.0245
+      - - 0.04
+        - 0.027
+        - 0.0245
+      material:
+        specular: 0.12
+        shininess: 0.18
+    collision_meshes:
+    - file: assets/competition/video_reference_20261111/potato/collision_0.obj
+      volume_m3: 0.00010490268611678054
+      bounds_m:
+      - - -0.04
+        - -0.027
+        - -0.0245
+      - - 0.04
+        - 0.027
+        - 0.0245

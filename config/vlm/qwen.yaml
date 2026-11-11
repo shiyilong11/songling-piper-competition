@@ -1,0 +1,22 @@
+schema_version: 1
+# 默认仅准备输入，不调用模型。正式推理必须显式选择 --mode infer。
+backend: local
+model_path: models/Qwen3-VL-4B-Instruct
+model_revision: ebb281ec70b05090aa6165b016eac8ec08e71b17
+local:
+  device: cuda:0
+  dtype: bfloat16
+  attention: sdpa
+  min_free_vram_mib: 12288  # 启动门槛，不是显存上限或实测需求。
+  max_pixels: 307200
+  min_pixels: 50176
+  max_new_tokens: 192
+http:
+  base_url: http://127.0.0.1:8000/v1
+  model: Qwen3-VL-4B-Instruct
+  api_key_env: QWEN_API_KEY
+  timeout_s: 60
+  max_tokens: 192
+  # 仅在 --backend http --mode infer 时发送当前图像和指令。
+# 模型坐标统一要求0..1000，适配器转换为原图像素，供既有评估器使用。
+response_coordinates: normalized_1000

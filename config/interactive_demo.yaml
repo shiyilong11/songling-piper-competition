@@ -1,0 +1,74 @@
+schema_version: 1
+host: 127.0.0.1
+port: 8770
+hand_eye_config: config/cameras/competition_sim_nominal.yaml
+default_scene: blocks
+default_seed: 42
+default_backend: qwen
+segmentation:
+  enabled: true
+  config: config/segmentation/sam2.yaml
+render_hz: 5
+realtime_factor: 1.0
+transport_height_m: 0.22
+# Sensor IK: if the vertical column at transport height is unreachable, try
+# these heights above the observed grasp centre (at least 0.10 m above table).
+# Drop/transport height remains unchanged; the connecting robot path is checked.
+local_pickup_lift_candidates_m: [0.10, 0.08]
+max_task_s: 120
+observation_search_q_rad:
+- - 0.0
+  - 0.7
+  - -0.85
+  - 0.0
+  - 1.15
+  - 0.0
+- - 0.0
+  - 0.4
+  - -0.8
+  - 0.0
+  - 1.2
+  - 0.0
+- - 0.15
+  - 0.4
+  - -0.8
+  - 0.0
+  - 1.2
+  - 0.0
+max_grasp_attempts: 2
+# Sensor-only estimates. Tune using actual gripper feedback and target sizes.
+grasp_feedback:
+  max_target_correction_m: 0.015
+  association_margin_m: 0.015
+  empty_width_m: 0.006
+  close_check_s: 0.20
+  close_stability_m: 0.004
+  test_lift_m: 0.04
+  test_lift_hold_s: 1.0
+  width_change_m: 0.008
+  loss_debounce_s: 0.10
+image_border_margin_px: 4
+depth_recovery_view_index: 2
+active_view:
+  enabled: true
+  max_attempts: 3
+  max_joint_step_rad: 0.35
+  backoff_m: 0.025
+  min_tcp_clearance_m: 0.1
+demos:
+  l3:
+    # Simulation convention. The field judge view needs its own measured reference.
+    judge_left_axis_base_xy: [0.0, 1.0]
+    survey_q_rad:
+      left: [0.65, 0.30, -0.75, 0.0, 1.20, 0.0]
+      right: [-0.65, 0.30, -0.75, 0.0, 1.20, 0.0]
+      near: [0.0, 0.40, -0.80, 0.0, 1.20, 0.0]
+      center: [0.0, 0.05, -0.60, 0.0, 1.20, 0.0]
+  l2_category_backend: qwen
+  l2_max_attempts: 8
+  l2_initial_q_rad: [0.0, 0.05, -0.60, 0.0, 1.20, 0.0]
+  target_edge_m: 0.20
+  observation_q_rad:
+    - [0.0, 0.05, -0.60, 0.0, 1.10, 0.0]
+    - [-0.15, 0.0, -0.60, 0.0, 1.10, 0.0]
+    - [0.15, 0.0, -0.60, 0.0, 1.10, 0.0]

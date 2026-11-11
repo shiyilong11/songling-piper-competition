@@ -1,0 +1,40 @@
+schema_version: 1
+# 独立于仿真场景。实机测量后调整工作区；这里不是桌面的真实边界。
+base_frame: base_link
+max_observation_age_s: 0.25
+max_input_skew_s: 0.05
+workspace:
+  min_m: [0.10, -0.45, -0.10]
+  max_m: [0.75, 0.45, 0.65]
+depth_range_m: [0.05, 3.0]
+pixel_stride: 2
+plane:
+  ransac_seed: 37
+  iterations: 160
+  max_fit_points: 6000
+  distance_threshold_m: 0.004
+  max_tilt_deg: 20.0
+  min_inliers: 80
+  min_inlier_ratio: 0.20
+  min_observed_span_m: 0.06
+proposals:
+  # 几何候选不是类别识别：容器、干扰物和机械臂自身也可能成为候选。
+  min_height_m: 0.006
+  max_height_m: 0.25
+  voxel_size_m: 0.003
+  connection_radius_m: 0.012
+  min_points: 12
+policy_points:
+  target_count: 512
+  scene_count: 1024
+  foreground_fraction: 0.75  # 桌面上方几何优先，避免小障碍被大量桌面点淹没。
+  seed: 41
+# 放置区由人工测量或感知提供；不从scene.xml/判分器自动读取。
+# 每个区域为局部XY矩形；T_base_region的原点位于放置平面。
+regions: []
+# 实机填写示例（值仅说明格式）：
+# - region_id: output_a
+#   kind: planar_region   # 或container，后者仍需场景点云表达容器壁
+#   T_base_region: [[1,0,0,0.4],[0,1,0,-0.2],[0,0,1,0.1],[0,0,0,1]]
+#   half_size_xy_m: [0.06,0.06]
+#   source: {kind: manual_config, detail: "现场测量，基座坐标系，米"}

@@ -1,0 +1,34 @@
+schema_version: 1
+frames:
+  base: base_link
+  end: link6
+  optical: camera_color_optical_frame
+joints:
+  names: [joint1, joint2, joint3, joint4, joint5, joint6]
+  # 与当前官方URDF一致，实机固件确认后核对。
+  lower_rad: [-2.618, 0.0, -2.967, -1.745, -1.22, -2.0944]
+  upper_rad: [2.618, 3.14, 0.0, 1.745, 1.22, 2.0944]
+control:
+  policy_hz: 20
+  physics_hz: 500
+  # 动作a[0:6]∈[-1,1]，为关节目标增量，最大速度×策略周期。
+  max_joint_speed_rad_s: [0.3, 0.3, 0.3, 0.4, 0.4, 0.4]
+  max_target_tracking_error_rad: 0.15
+  # a[6]∈[-1,1]：-1完全闭合，+1完全张开；使用总开口宽度。
+  gripper_width_range_m: [0.0, 0.07]
+  max_gripper_speed_m_s: 0.04
+observation:
+  camera_config: config/eye_in_hand.yaml
+  max_sensor_skew_s: 0.05
+  # RGB uint8 HWC；深度float32米，NaN无效；关节rad/rad/s；四元数xyzw。
+ros2:
+  # 对应官方humble驱动。实际命名空间可修改；当前没有运行ROS。
+  driver_joint_state_topic: /joint_states_single
+  driver_command_topic: /joint_ctrl_single
+  action_topic: /piper_interface/action
+  normalized_state_topic: /piper_interface/joint_state
+  driver_speed_percent: 20
+  gripper_effort: 1.0
+  driver_gripper_multiplier: 1.0
+  action_timeout_s: 0.25
+  state_timeout_s: 0.25

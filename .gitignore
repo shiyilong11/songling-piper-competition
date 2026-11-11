@@ -1,0 +1,16 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+.venv/
+.local/
+.env
+/models
+artifacts/
+logs/
+wheelhouse*/
+references/upstream/
+config/cameras/*calibrated*.yaml
+/field_calibration.yaml
+*.local.yaml
+/field-build/

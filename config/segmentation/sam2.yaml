@@ -1,0 +1,12 @@
+schema_version: 1
+model: sam2.1_hiera_small
+checkpoint: models/sam2/sam2.1_hiera_small.pt
+model_config: configs/sam2.1/sam2.1_hiera_s.yaml
+# Existing GPU training has priority. No automatic CUDA selection.
+device: cpu
+cpu_threads: 2
+timeout_s: 120
+min_mask_pixels: 60
+max_mask_fraction: 0.65
+# SAM predicted IoU is a ranking heuristic, not a calibrated confidence.
+min_predicted_iou: 0.5
