@@ -36,6 +36,14 @@ python3.12 -m venv .local/qwen-runtime
 
 仿真相机参数在 `config/cameras/competition_sim_nominal.yaml`，仿真裁判左右参考在 `config/interactive_demo.yaml`。每次运行保存传感器记录、抓放事件及复查结果。
 
+## L3 学习策略接口
+
+L3 默认使用 IK。后续可在 Python 中通过 `Demo(l3_transfer_executor=...)` 或 `ExplorationController(transfer_executor=...)` 接入单件抓放执行器。执行器接收已确认的目标实例、同帧观测、目标 mask 和实测目标区，释放后返回物体在基座坐标系中的预计中心（米）。任务控制器仍独立复查物体入区和两秒稳定性。只有确认抓空且已恢复时，执行器才能通过 `RetryableEmptyTransfer` 请求再次观测。
+
+离线加载本地 SB3 权重时，安装可选依赖 `pip install -e '.[learning]'`，使用 [MultiRatePolicyPreview](src/piper_sim/competition_policy.py)。每次视觉更新提供对齐深度、目标与目标区 mask、原始帧时间和拍摄位姿。每次预测提供当前关节与夹爪反馈和上一次实际下发的动作。模型返回六个归一化关节增量及一个归一化夹爪开口。频率和时效要求见 [多频率配置](config/learning/piper_multirate.yaml)。
+
+只读预测仅用于开发验证。BC 权重、训练数据和实测标定单独保存在本地。实机学习执行器和 200 Hz ROS 2 下发尚未验证。
+
 ## 准备现场部署
 
 使用组委会提供的 Ubuntu 22.04 x86_64 / ROS 2 Humble 镜像和现场驱动。队内离线目录包含指定的 Python 3.10 依赖、SAM2.1、YOLOE 导出及可选千问权重。源码入口为 `src/piper_sim/field_cli.py`，标定模板和安装脚本在 `deploy/field/`。

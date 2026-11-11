@@ -2,13 +2,16 @@
 
 from collections import Counter
 from dataclasses import dataclass
+from typing import Protocol
 
 import cv2
 import numpy as np
 
-from piper_sim.competition_sensor import PlacementCheck
+from piper_sim.competition_sensor import PlacementCheck, ZoneEstimate
+from piper_sim.demo_skill import TargetEstimate
 from piper_sim.grasp_feedback import GraspFeedbackError, match_fresh_target
 from piper_sim.l2_sensor_controller import L2SensorController
+from piper_sim.observation import Observation
 from piper_sim.scene_memory import SceneMemory, load_memory_config
 from piper_sim.scene_observation import (
     CalibrationEstimate,
@@ -154,6 +157,27 @@ class SurveyView:
     targets: dict
 
 
+@dataclass(frozen=True)
+class TransferRequest:
+    target_instance_id: str
+    category: str
+    observation: Observation
+    target: TargetEstimate
+    destination: ZoneEstimate
+    attempt: int
+    reserve_lateral_strip: bool
+
+
+class RetryableEmptyTransfer(ValueError):
+    """The grasp was empty and the arm already recovered for a new observation."""
+
+
+class TransferExecutor(Protocol):
+    def __call__(self, request: TransferRequest) -> np.ndarray:
+        """Release the target and return its estimated base-frame centre in metres."""
+        ...
+
+
 def preserve_square_evidence(snapshot, views):
     """Prefer a measured, complete square face over a later partial crop."""
     squares = {}
@@ -180,7 +204,10 @@ def preserve_square_evidence(snapshot, views):
 class ExplorationController(L2SensorController):
     """Interpret the task card, then plan and verify using public sensors."""
 
-    def __init__(self, *args, left_axis, show_masks, publish, **kwargs):
+    def __init__(
+        self, *args, left_axis, show_masks, publish,
+        transfer_executor: TransferExecutor | None = None, **kwargs
+    ):
         super().__init__(*args, method="yoloe_sam2", **kwargs)
         self.calibration = CalibrationEstimate(
             self.scene.calibration,
@@ -196,6 +223,7 @@ class ExplorationController(L2SensorController):
         )
         self.memory = SceneMemory(config)
         self.left_axis, self.show_masks, self.publish = left_axis, show_masks, publish
+        self.transfer_executor = transfer_executor
         self.views = {}
         self.zone_evidence = {}
         self.zone_observation_poses = {}
@@ -408,6 +436,68 @@ class ExplorationController(L2SensorController):
             self.motion.hold(0.4)
         raise ValueError("未观测到完整入区且持续稳定两秒的证据。")
 
+    def execute_ik_transfer(self, request, action):
+        destination = request.destination.color
+        target = request.target
+        planning = {
+            "category": request.category,
+            "prefer_near_release": True,
+            "reserve_lateral_strip": request.reserve_lateral_strip,
+        }
+        try:
+            plan = self.make_plan(target, destination, **planning)
+        except ValueError:
+            self.events.append(
+                {
+                    "event": "l3_plan_rejected",
+                    **action,
+                    "attempt": request.attempt,
+                    "diagnostics": self.last_plan_diagnostics,
+                }
+            )
+            if np.linalg.norm(request.destination.center) <= 0.58:
+                raise
+            # Retry the outer zone with a lower approach and full path checks.
+            self.motion.cfg["release_hover_above_table_m"] = 0.16
+            try:
+                plan = self.make_plan(target, destination, budget_s=10.0, **planning)
+            finally:
+                self.motion.cfg.pop("release_hover_above_table_m", None)
+        _, candidates = self.visible_geometry()
+        match_fresh_target(target, candidates, self.motion_cfg["grasp_feedback"])
+        self.events.append(
+            {
+                "event": "l3_pick_place_plan",
+                **action,
+                "attempt": request.attempt,
+                "pick_m": plan["center"].tolist(),
+                "release_m": plan["place"].tolist(),
+            }
+        )
+        action["plan"] = {
+            "pick_m": plan["center"].tolist(),
+            "release_m": plan["place"].tolist(),
+        }
+        action["attempts"] = request.attempt
+        self.publish(self.cards)
+        try:
+            grip = self.motion.pick_closed_loop(plan)
+        except GraspFeedbackError as exc:
+            if not exc.retryable:
+                raise
+            self.motion.recover_empty()
+            raise RetryableEmptyTransfer(str(exc)) from exc
+        self.events.append(
+            {
+                "event": "l3_grip_estimate",
+                **action,
+                "evidence_status": grip["evidence_status"],
+                "official_lift_verified": False,
+            }
+        )
+        self.motion.place_closed_loop(plan)
+        return plan.get("object_destination_estimate_m", plan["place"])
+
     def carry(self, action):
         color = action["category"]
         destination = action["destination_region_id"].removesuffix("_region")
@@ -418,79 +508,31 @@ class ExplorationController(L2SensorController):
             for card in self.cards
             for other in card["actions"]
         )
-        planning = {
-            "category": color,
-            "prefer_near_release": True,
-            "reserve_lateral_strip": leave_banana_space,
-        }
         for attempt in (1, 2):
             obs, target = self.reacquire(action)
             self.show_masks(obs, [(color, destination, target.mask)])
             self.callback("planning")
-            try:
-                plan = self.make_plan(target, destination, **planning)
-            except ValueError:
-                self.events.append(
-                    {
-                        "event": "l3_plan_rejected",
-                        **action,
-                        "attempt": attempt,
-                        "diagnostics": self.last_plan_diagnostics,
-                    }
-                )
-                if np.linalg.norm(self.scene.zones[destination].center) <= 0.58:
-                    raise
-                # Retry the outer zone with a lower release approach. All
-                # Cartesian and connecting-path clearance checks still run.
-                self.motion.cfg["release_hover_above_table_m"] = 0.16
-                try:
-                    plan = self.make_plan(
-                        target,
-                        destination,
-                        budget_s=10.0,
-                        **planning,
-                    )
-                finally:
-                    self.motion.cfg.pop("release_hover_above_table_m", None)
-            _, candidates = self.visible_geometry()
-            match_fresh_target(target, candidates, self.motion_cfg["grasp_feedback"])
-            self.events.append(
-                {
-                    "event": "l3_pick_place_plan",
-                    **action,
-                    "attempt": attempt,
-                    "pick_m": plan["center"].tolist(),
-                    "release_m": plan["place"].tolist(),
-                }
+            request = TransferRequest(
+                action["target_instance_id"], color, obs, target, self.scene.zones[destination],
+                attempt, leave_banana_space,
             )
-            action["plan"] = {
-                "pick_m": plan["center"].tolist(),
-                "release_m": plan["place"].tolist(),
-            }
-            action["attempts"] = attempt
-            self.publish(self.cards)
             try:
-                grip = self.motion.pick_closed_loop(plan)
-            except GraspFeedbackError as exc:
-                if not exc.retryable:
-                    raise
-                self.motion.recover_empty()
+                if self.transfer_executor is None:
+                    expected = self.execute_ik_transfer(request, action)
+                else:
+                    action["attempts"] = attempt
+                    self.publish(self.cards)
+                    expected = self.transfer_executor(request)
+            except RetryableEmptyTransfer as exc:
                 if attempt == 2:
-                    raise ValueError(str(exc)) from exc
+                    raise
                 self.events.append({"event": "l3_pick_retry", **action, "reason": str(exc)})
                 continue
-            self.events.append(
-                {
-                    "event": "l3_grip_estimate",
-                    **action,
-                    "evidence_status": grip["evidence_status"],
-                    "official_lift_verified": False,
-                }
-            )
-            self.motion.place_closed_loop(plan)
             self.release_counts[destination] += 1
-            expected = plan.get("object_destination_estimate_m", plan["place"])
             try:
+                expected = np.asarray(expected, dtype=float)
+                if expected.shape != (3,) or not np.isfinite(expected).all():
+                    raise ValueError("执行器未返回有效的释放位置估计。")
                 return self.verify_release(action, expected, target), attempt
             except ValueError:
                 self.unconfirmed_release_zones.add(destination)

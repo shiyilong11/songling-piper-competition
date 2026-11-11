@@ -23,7 +23,7 @@ from piper_sim.demo_skill import PickPlaceSkill, candidates_from_rgbd, select_pi
 from piper_sim.field_dashboard import render_segmentation
 from piper_sim.field_process import FieldProcess
 from piper_sim.l2_sensor_controller import L2SensorController
-from piper_sim.l3_competition import CARDS, ExplorationController, parse_round
+from piper_sim.l3_competition import CARDS, ExplorationController, TransferExecutor, parse_round
 from piper_sim.sam_adapter import Sam2Client
 from piper_sim.sensor_robot import SensorRobot
 from piper_sim.skill_runtime import ManipulationSkills, SkillCoordinator
@@ -41,10 +41,11 @@ class ExplorationWorld(CompetitionWorld):
 
 
 class Demo(CameraPanel):
-    def __init__(self, output, config, task="l3"):
+    def __init__(self, output, config, task="l3", *, l3_transfer_executor: TransferExecutor | None = None):
         self.output = output.resolve()
         self.output.mkdir(parents=True, exist_ok=False)
         self.cfg = yaml.safe_load(config.read_text())
+        self.l3_transfer_executor = l3_transfer_executor
         self.settings, self.scene_cfg = wrist_scene_config(
             hand_eye_config=self.cfg.get("hand_eye_config")
         )
@@ -645,7 +646,7 @@ class Demo(CameraPanel):
             "grasp_tilt_candidates_rad": [0.6, 0.9, 0.35, 0.15, -0.15, -0.35, -0.6, -0.9],
         }
         report = {
-            "mode": "sensor_only_ik",
+            "mode": "sensor_only_ik" if self.l3_transfer_executor is None else "external_transfer",
             "official_score": None,
             "official_lift_verified": False,
             "judge_left_axis_base_xy": settings["judge_left_axis_base_xy"],
@@ -713,6 +714,7 @@ class Demo(CameraPanel):
             left_axis=settings["judge_left_axis_base_xy"],
             publish=publish,
             show_masks=self.show_task_masks,
+            transfer_executor=self.l3_transfer_executor,
         )
         controller.cards = []
         failure = None

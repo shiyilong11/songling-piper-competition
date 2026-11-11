@@ -1,3 +1,4 @@
+from collections import Counter
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -7,6 +8,7 @@ import pytest
 from piper_sim.l3_competition import (
     CARDS,
     ExplorationController,
+    RetryableEmptyTransfer,
     SurveyView,
     compile_round,
     parse_round,
@@ -102,3 +104,42 @@ def test_release_verifier_switches_to_another_observed_zone_pose():
     assert controller.verify_release(action, None, None) == "verified"
     assert controller.verify_release_from_view.call_args.args[-1] is second
     assert controller.events[0]["reason"] == "clipped"
+
+
+def test_external_transfer_reacquires_after_empty_grasp_and_requires_independent_verification():
+    controller = object.__new__(ExplorationController)
+    zone = SimpleNamespace(color="green")
+    controller.scene = SimpleNamespace(zones={"green": zone})
+    controller.cards = []
+    controller.events = []
+    controller.release_counts = Counter()
+    controller.unconfirmed_release_zones = set()
+    controller.publish = Mock()
+    controller.callback = Mock()
+    controller.show_masks = Mock()
+    observations = [object(), object()]
+    target = SimpleNamespace(mask=np.ones((2, 2), dtype=bool))
+    controller.reacquire = Mock(side_effect=[(obs, target) for obs in observations])
+    expected = np.array([0.5, 0.1, 0.0])
+    controller.transfer_executor = Mock(side_effect=[RetryableEmptyTransfer("empty"), expected])
+    controller.execute_ik_transfer = Mock()
+    controller.verify_release = Mock(side_effect=ValueError("outside"))
+    action = {
+        "target_instance_id": "measured_1",
+        "category": "persimmon",
+        "destination_region_id": "green_region",
+    }
+
+    with pytest.raises(ValueError, match="outside"):
+        controller.carry(action)
+
+    requests = [call.args[0] for call in controller.transfer_executor.call_args_list]
+    assert [request.observation for request in requests] == observations
+    assert [request.attempt for request in requests] == [1, 2]
+    assert requests[-1].destination is zone
+    checked_action, checked_center, checked_target = controller.verify_release.call_args.args
+    assert checked_action is action and checked_target is target
+    np.testing.assert_array_equal(checked_center, expected)
+    assert controller.release_counts == {"green": 1}
+    assert controller.unconfirmed_release_zones == {"green"}
+    controller.execute_ik_transfer.assert_not_called()

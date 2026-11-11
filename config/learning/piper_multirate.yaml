@@ -1,0 +1,24 @@
+schema_version: 1
+purpose: piper_low_rate_vision_high_rate_joint_control
+rates:
+  policy_hz: 20
+  joint_command_hz: 200
+  joint_feedback_hz: 200
+  depth_hz: 10
+  mask_hz: 10
+  physics_hz: 1000
+control:
+  interpolation: linear_with_per_tick_joint_and_gripper_rate_limits
+  max_visual_age_s: 0.25
+  max_joint_age_s: 0.015
+  stale_input_behavior: hold_latest_issued_target
+provenance:
+  joint_200_hz: https://github.com/agilexrobotics/piper_sdk/issues/130
+  official_reply_date: '2026-10-27'
+  physics_1000_hz: simulation_choice_for_integer_5_substeps_per_200_hz_tick_not_a_hardware_spec
+  depth_and_mask_10_hz: project_configuration_not_an_official_hardware_limit
+  hardware_frequency_measured: false
+data:
+  existing_300_episodes: preserve_original_20_hz_timestamps_and_labels
+  interpolated_targets_are_demonstrations: false
+  vision_pose: original_capture_time_end_pose
